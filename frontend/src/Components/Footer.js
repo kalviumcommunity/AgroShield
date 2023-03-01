@@ -18,7 +18,7 @@ function Footer() {
 
       </ul>
       <ul className='menu'>
-        <li><a href='/home'>Home</a></li>
+        <li><a href='/'>Home</a></li>
         <li><a href='/form'>About Us</a></li>
         <li><a href='#'>Services</a></li>
         <li><a href='#'>Team</a></li>
