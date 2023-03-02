@@ -7,9 +7,7 @@ import { CircularProgress } from '@chakra-ui/react';
 
 function Startpage() {
 
-  setInterval(() => {
-    window.location.href="/home";
-  }, 5000);
+
  
 
   return (

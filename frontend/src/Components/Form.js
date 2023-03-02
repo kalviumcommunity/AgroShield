@@ -19,11 +19,11 @@ function Form() {
   const checkfield=(e)=>{
     e.preventDefault();
     if(Crop!="" && medicine!="" && type!="" && username!="" && diseasename!=""){
-    console.log("cropname",Crop);
-    console.log("Medicine Name",medicine);
-    console.log("Type",type);
-    console.log("dosease",diseasename);
-    console.log("Username",username);
+    // console.log("cropname",Crop);
+    // console.log("Medicine Name",medicine);
+    // console.log("Type",type);
+    // console.log("dosease",diseasename);
+    // console.log("Username",username);
     fetch("http://localhost:2000/userinput", {
      
     // Adding method type
@@ -49,7 +49,7 @@ function Form() {
  
 // Displaying results to console
 .then(json => console.log(json));
-    window.location.href="/home";
+    window.location.href="/";
     }
     
   }
@@ -117,7 +117,7 @@ function Form() {
     </Flex>
 
 
-       <Footer/>
+       {/* <Footer/> */}
     </div>
   )
 }

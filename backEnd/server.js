@@ -15,7 +15,7 @@ mongoose.set('strictQuery', false);
 
 // mongodb+srv://anmol123:1234678@cluster0.br2alyu.mongodb.net/?retryWrites=true&w=majority
 mongodb://localhost:27017/
-mongoose.connect("mongodb://localhost/userdata",{
+mongoose.connect("mongodb://localhost/Agroshield",{
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     family: 4
