@@ -14,11 +14,12 @@ function Form() {
   const [type,settype] = useState('');
   const [diseasename,setdisease] = useState('');
   const [username,setname] = useState('');
+  const [image,setimage] = useState('');
 
 
   const checkfield=(e)=>{
     e.preventDefault();
-    if(Crop!="" && medicine!="" && type!="" && username!="" && diseasename!=""){
+    if(Crop!="" && medicine!="" && type!="" && username!="" &&  image!="" && diseasename!=""){
     // console.log("cropname",Crop);
     // console.log("Medicine Name",medicine);
     // console.log("Type",type);
@@ -36,6 +37,7 @@ function Form() {
       "solution":medicine,
       "UserName":username,
       "type":type,
+      "image":image,
   }),
      
     // Adding headers to the request
@@ -85,11 +87,12 @@ function Form() {
             <FormControl mb={'10'} >
               <FormLabel fontSize={'20px'}  >Type of Medicine</FormLabel>
               <select onChange={(e)=>settype(e.target.value)} >
-            <option value="Pesticide">Pesticide</option>
-            <option value="Herbicide">Herbicide</option>
-            <option value="Fungicide">Fungicide</option>
-            <option value="Bio-Fungicide">Bio-Fungicide</option>
-            <option value="Bio-insecticide">Bio-insecticide</option>
+                <option value="">Select the type</option>
+            <option value="insecticide">Insecticide</option>
+            <option value="herbicide">Herbicide</option>
+            <option value="fungicide">Fungicide</option>
+            <option value="biofungicide">Bio-Fungicide</option>
+            <option value="bioinsecticide">Bio-Insecticide</option>
               </select>
             </FormControl>
 
@@ -99,6 +102,12 @@ function Form() {
             <FormControl mb={'10'} >
               <FormLabel fontSize={'20px'} >Disease Name</FormLabel>
               <Input onChange={(e)=>setdisease(e.target.value)} h={'16'} size={'lg'} type={'text'}  placeholder="Type Disease Name..." />
+            </FormControl>
+
+
+            <FormControl mb={'10'} >
+              <FormLabel fontSize={'20px'} >Disease Image</FormLabel>
+              <Input onChange={(e)=>setimage(e.target.value)} h={'16'} size={'lg'} type={'text'}  placeholder="Paste the image link here..." />
             </FormControl>
 
 

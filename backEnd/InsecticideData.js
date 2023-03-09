@@ -6,20 +6,34 @@ const channelModel =  new mongoose.Schema({
         required:true,
         trim: true
     },
-    Insecticide:{
+    diseaseName:{
         type:String,
         required: true,
         trim:true,
     },
-    Disease:{
+    solution:{
         type:String,
         required: true,
         trim:true,
-    }
-    
+    },
+    UserName:{
+        type:String,
+        required:true,
+        trim:true,
+    },
+    type:{
+        type:String,
+        required:true,
+        trim:true,
+    },
+    image:{
+        type:String,
+        required:true,
+        trim:true,
+    } 
 });
 
 
-const ChannelModel = mongoose.model("insecticide",channelModel)
+const ChannelModel = mongoose.model("userinsecticide",channelModel)
 
 module.exports = ChannelModel;

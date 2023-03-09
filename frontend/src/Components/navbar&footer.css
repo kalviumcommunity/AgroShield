@@ -126,6 +126,10 @@ html{
     font-size: 1rem;
 }
 
+.navbar-links {
+    cursor: pointer;
+}
+
 
 
 
@@ -145,6 +149,12 @@ html{
     padding: 0.6rem;
 }
 
+.navbar2{
+    justify-content: center;
+    display: flex;
+    padding: 0.6rem;
+}
+
 /* .navbar div:hover{
     
     background-color: #FFB800;
@@ -154,6 +164,13 @@ html{
 
 
 .navbar a{
+    color:#ffffff;
+    display: inline-block;
+    padding:1.3rem;
+    font-size: 1.7rem;
+}
+
+.navbar2 div{
     color:#ffffff;
     display: inline-block;
     padding:1.3rem;
@@ -187,9 +204,41 @@ html{
     
 }
 
+
+.bottom-navbar2{
+    text-align: center;
+    background:var(--green);
+    position: fixed;
+    bottom:50px; left:0; right:0;
+    z-index: 1000;
+    display: none;
+    height: 7%;
+     
+     align-items: center;
+     justify-content: center;
+    
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
 .bottom-navbar a{
     font-size: 3.5rem;
     padding:2rem;
+    color:#fff;
+}
+
+.bottom-navbar2 div{
+    font-size: 2rem;
+    padding:1rem;
     color:#fff;
 }
 
@@ -308,6 +357,10 @@ footer .menu li a:hover{
         display: flex;
     }
 
+    .bottom-navbar2{
+        display: flex;
+    }
+
     #search-btn{
         display: inline-block;
     }
@@ -363,6 +416,9 @@ footer .menu li a:hover{
    .bottom-navbar{
     height: 9%;
    }
+   .bottom-navbar2{
+    height: 9%;
+   }
 }
 
 @media (max-height:350px){
@@ -370,4 +426,7 @@ footer .menu li a:hover{
     .bottom-navbar{
      height: 15%;
     }
+    .bottom-navbar2{
+        height: 15%;
+       }
  }

@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 
-import { Box, Flex, SimpleGrid } from '@chakra-ui/react';
+import { Box, Flex, SimpleGrid,Heading,Text,Button } from '@chakra-ui/react';
 import { useState } from 'react';
 import Startpage from './Startpage';
+import { Card,Image,Divider,ButtonGroup, Stack, CardBody, CardFooter } from '@chakra-ui/react'
 
 
 function Home(props) {
@@ -29,11 +30,12 @@ function Home(props) {
   },[]);
   
 useEffect(()=>{
-  fetch("http://localhost:5000/fungicide").then(res => res.json())
+  fetch("http://localhost:2000/userinput").then(res => res.json())
 .then((data)=>{
-  // console.log(data.answer); 
-  setsearch(data.answer);
-  setTemporary(data.answer);
+  // console.log(data);
+  setsearch(data);
+  
+  setTemporary(data);
   
 
 }).catch((err)=>{
@@ -41,7 +43,8 @@ useEffect(()=>{
 })
 },[])
 
-// useEffect(()=> console.log(search), [search])
+
+// useEffect(()=> console.log(temporary), [temporary])
 
 
 
@@ -59,18 +62,21 @@ if(value){
 
 
 
+
 useEffect(() => {
-   setsearch(temporary.filter((e) => {
-    // const z=e.cropName.toLowerCase();
-    const searchedTerm = Input;
-            const fullName = e.cropName.toLowerCase();
-                  return fullName.includes(searchedTerm) || fullName.startsWith(searchedTerm)  &&
-                  fullName !== searchedTerm  
-    
-  
-  
-  }));
-}, [props.name]);
+  setsearch(temporary.filter((e) => {
+   // const z=e.cropName.toLowerCase();
+   const searchedTerm = Input;
+           const fullName =   e?.cropName?.toLowerCase();
+           // (props.type)?console.log(props.type):console.log("propsis empty")
+                 // return  fullName.includes(searchedTerm) || fullName.startsWith(searchedTerm)  &&
+                 // fullName !== searchedTerm  || (props.type)?props.type==e.type:props.type!==e.type
+           return (props.type)?props.type==e.type && fullName.includes(searchedTerm) && fullName.startsWith(searchedTerm):fullName.includes(searchedTerm) || fullName.startsWith(searchedTerm)
+   
+ 
+ 
+ }));
+}, [props.type,props.name]);
 
 
 
@@ -85,64 +91,39 @@ useEffect(() => {
       else{
         return (
           (value)?
-          <SimpleGrid p="15px" spacing={10} minChildWidth="350px" >
+          <>
+
+          <SimpleGrid mt={20} p="15px" spacing={10} minChildWidth="350px" >
           {
             filtercrop.map((dat, index)=>{
               return (
-              <Box key={index} boxShadow='outline'  rounded='md'  fontSize={'15px'} textAlign={'left'} color={'black'} bg='white' h="200px" border="1px solid" >
-            <Flex justifyContent={'space-around'}>
-            <Box mt={'2vh'} >
-              Cropname:
-            </Box>
-            <Box display={'flex'}  mt={'2vh'}  >
-              {dat.cropName}
-            </Box>
-            </Flex>
-  
-  
-            <Flex justifyContent={'space-around'}>
-            <Box  >
-              Disease:
-            </Box>
-            <Box display={'flex'}   >
-              {dat.Disease}
-            </Box>
-            </Flex>
-  
-  
-  
-            <Flex justifyContent={'space-around'}>
-            <Box  >
-              Solution:
-            </Box>
-            <Box display={'flex'}  >
-              {dat.Fungicide}
-            </Box>
-            </Flex>
-  
-  
-  
-            <Flex justifyContent={'space-around'}>
-            <Box   >
-              Type:
-            </Box>
-            <Box display={'flex'}   >
-              Fungicide
-            </Box>
-            </Flex>
-  
-  
-            {/* <Flex justifyContent={'space-around'}>
-            <Box   >
-              Username:
-            </Box>
-            <Box display={'flex'}    >
-              {dat.UserName}
-            </Box>
-            </Flex> */}
-  
-            
-          </Box>
+                <Card key={index} maxW='350px'>
+                <CardBody>
+                  <Image
+                    h={'200px'}
+                    w='full'
+                    src={dat.image}
+                    alt='image'
+                    borderRadius='lg'
+                  />
+                  <Stack  mt='6' spacing='3'  >
+                  <Heading fontSize={'15px'} display={'flex'} size='md'>CropName : {dat.cropName}</Heading>
+      <Heading fontSize={'15px'} display={'flex'} size='md'>Type : {dat.type}</Heading>
+      <Heading fontSize={'15px'} display={'flex'} size='md'>DiseaseName : {dat.diseaseName}</Heading>
+      <Heading color={'green.300'} fontSize={'13px'} display={'flex'} size='md'>Solution : {dat.solution}</Heading>
+                    
+                    
+                  </Stack>
+                </CardBody>
+                <Divider />
+              
+              
+                <CardFooter>
+                <Heading  fontSize={'17px'} size='md'>UserName : {dat.UserName}</Heading>
+                </CardFooter>
+              
+              
+              </Card>
               
               )
             })
@@ -152,6 +133,7 @@ useEffect(() => {
   
   
          </SimpleGrid>
+         </>
               :
         
         
@@ -163,64 +145,38 @@ useEffect(() => {
             
               
         
-               <SimpleGrid p="15px" spacing={10} minChildWidth="250px" >
+               <SimpleGrid mt={20} p="15px" spacing={10} minChildWidth="350px" >
                 {
                   apidata.map((dat, index)=>{
                     return (
-                    <Box key={index} boxShadow='outline'  rounded='md'  fontSize={'15px'} textAlign={'left'} color={'black'} bg='white' h="200px" border="1px solid" >
-                  <Flex justifyContent={'space-around'}>
-                  <Box mt={'2vh'} >
-                    Cropname:
-                  </Box>
-                  <Box display={'flex'}  mt={'2vh'}  >
-                    {dat.cropName}
-                  </Box>
-                  </Flex>
-        
-        
-                  <Flex justifyContent={'space-around'}>
-                  <Box  >
-                    Disease:
-                  </Box>
-                  <Box display={'flex'}   >
-                    {dat.diseaseName}
-                  </Box>
-                  </Flex>
-        
-        
-        
-                  <Flex justifyContent={'space-around'}>
-                  <Box  >
-                    Solution:
-                  </Box>
-                  <Box display={'flex'}  >
-                    {dat.solution}
-                  </Box>
-                  </Flex>
-        
-        
-        
-                  <Flex justifyContent={'space-around'}>
-                  <Box   >
-                    Type:
-                  </Box>
-                  <Box display={'flex'}   >
-                    {dat.type}
-                  </Box>
-                  </Flex>
-        
-        
-                  <Flex justifyContent={'space-around'}>
-                  <Box   >
-                    Username:
-                  </Box>
-                  <Box display={'flex'}    >
-                    {dat.UserName}
-                  </Box>
-                  </Flex>
-        
-                  
-                </Box>
+                      <Card key={index} maxW='350px'>
+  <CardBody>
+    <Image
+    h={'200px'}
+    w='full'
+      src={dat.image}
+      alt='Green double couch with wooden legs'
+      borderRadius='lg'
+    />
+    <Stack  mt='6' spacing='3'  >
+      
+      <Heading fontSize={'15px'} display={'flex'} size='md'>CropName : {dat.cropName}</Heading>
+      <Heading fontSize={'15px'} display={'flex'} size='md'>Type : {dat.type}</Heading>
+      <Heading fontSize={'15px'} display={'flex'} size='md'>DiseaseName : {dat.diseaseName}</Heading>
+      <Heading color={'green.300'} fontSize={'13px'} display={'flex'} size='md'>Solution : {dat.solution}</Heading>
+      
+      
+    </Stack>
+  </CardBody>
+  <Divider />
+
+
+  <CardFooter>
+  <Heading  fontSize={'17px'} size='md'>UserName : {dat.UserName}</Heading>
+  </CardFooter>
+
+
+</Card>
                     
                     )
                   })

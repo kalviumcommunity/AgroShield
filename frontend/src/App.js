@@ -9,6 +9,8 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Startpage from './Components/Startpage';
 import Page from './Components/Page';
+import Login from './Components/Login';
+import Signup from './Components/Signup';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       {/* <Navbar/> */}
       {/* <Home/> */}
       <Routes>
+        <Route path='/signup' element={<Signup/>} />
+        <Route path='/login' element={<Login/>} />
         <Route path='/' element={<Navbar />} />
         <Route path='/form' element={<Form/>} />
       </Routes>

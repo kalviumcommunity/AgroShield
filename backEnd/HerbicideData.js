@@ -30,10 +30,10 @@ const channelModel =  new mongoose.Schema({
         type:String,
         required:true,
         trim:true,
-    } 
+    }  
 });
 
 
-const ChannelModel = mongoose.model("userfungicide",channelModel)
+const ChannelModel = mongoose.model("userherbicide",channelModel)
 
 module.exports = ChannelModel;

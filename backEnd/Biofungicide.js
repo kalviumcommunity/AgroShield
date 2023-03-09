@@ -34,6 +34,6 @@ const channelModel =  new mongoose.Schema({
 });
 
 
-const ChannelModel = mongoose.model("userfungicide",channelModel)
+const ChannelModel = mongoose.model("userbiofungicide",channelModel)
 
 module.exports = ChannelModel;
