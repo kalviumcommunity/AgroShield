@@ -1,26 +1,15 @@
 import "./navbar&footer.css";
 import { FaSearch, FaHome, FaTags, FaComments, FaList } from "react-icons/fa";
-// import logo from '../asseets/logo.png'
 import Home from "./Home";
-
-// import {BsFillPersonFill} from 'react-icons/bs'
 import { Button } from "@chakra-ui/react";
 import { useState } from "react";
-// import { createContext } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-// const inputvalue = createContext("");
 
 function Navbar() {
   const [inputvalu, setinput] = useState("");
   const [medicineType,setmedicineType] = useState("");
   const homeChecker = useLocation().pathname === '/'
-
-  // console.log("i am the input value in navbar input box     ",inputvalu);
-
-  // const valuue=createContext(inputvalue);
-
-
 
   const handleSearch = () => {
     const searchForm = document.querySelector(".search-form");
@@ -41,7 +30,6 @@ function Navbar() {
 <>
       <header className="header">
         <div className="header-1">
-          {/* <img id='logo-img' src={logo}/> */}
           <a href="/" className="logo" id="websiteName">
             {" "}
             Agroshield{" "}
@@ -66,11 +54,13 @@ function Navbar() {
             <div id="search-btn" onClick={handleSearch}>
               <FaSearch />
             </div>
-            <a href="/signup">
+           
+              <Link to='/signup'>
             <Button fontSize={"15px"} h={"14"} mr={"1rem"}>
               Sign in
             </Button>
-            </a>
+            </Link>
+            
           </div>
         </div>
 
@@ -78,29 +68,34 @@ function Navbar() {
         <div className="header-2">
           <nav className="navbar">
             <div>
-              <a
-                href="/"
+              <Link to='/'
+              
                 id="navbar-links"
                 onMouseEnter={handleHoverEnter}
                 onMouseLeave={handleHoverLeave}
               >
                 Home
-              </a>
+             
+              </Link>
             </div>
             <div>
-              <a href="/form" className="navbar-links">
+              <Link to='/form' 
+               className="navbar-links">
                 Form
-              </a>
+              </Link>
             </div>
             <div>
-              <a href="/login" className="navbar-links">
+              <Link to='/login' className="navbar-links">
                 Sign up
-              </a>
+              
+              </Link>
             </div>
             <div>
-              <a href="#home" className="navbar-links">
+              <Link  
+              className="navbar-links">
                 About Us
-              </a>
+              
+              </Link>
             </div>
           </nav>
         </div>
@@ -193,18 +188,24 @@ function Navbar() {
 }
 
 <nav className="bottom-navbar">
-        <a href="/">
+      <Link to='/' >
+        
           <FaHome />
-        </a>
-        <a href="/form">
+        
+        </Link>
+        <Link to='/form'>
           <FaList />
-        </a>
-        <a href="/login">
+        
+        </Link>
+        <Link to='/login' >
           <FaTags />
-        </a>
-        <a href="#reviews">
+        
+        </Link>
+        <Link >
+        
           <FaComments />
-        </a>
+        
+        </Link>
       </nav>
 
 
@@ -227,4 +228,4 @@ function Navbar() {
 }
 
 export default Navbar;
-// export {inputvalue}
+

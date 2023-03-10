@@ -25,8 +25,6 @@ dotenv.config({path:'./config.env'});
 const DB=process.env.DATABASE;
 const PORT=process.env.PORT;
 
-// mongodb+srv://anmol123:1234678@cluster0.br2alyu.mongodb.net/?retryWrites=true&w=majority
-mongodb://localhost:27017/
 mongoose.connect(DB,{
     useNewUrlParser: true, 
     useUnifiedTopology: true,

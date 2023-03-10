@@ -5,6 +5,7 @@ import { Flex, Input,Box,Heading,FormControl,FormLabel,Button } from '@chakra-ui
 import Navbar from './Navbar'
 import React from 'react'
 import { useState } from 'react'
+import {useNavigate} from "react-router-dom"
 
 function Login () {
 
@@ -13,7 +14,9 @@ function Login () {
   const [password,setpassword] = useState('');
   const [confirmpassword,setconfirmpassword] = useState('');
 
-  const LOGIN=process.env.REACT_APP_LOGIN
+  const LOGIN=process.env.REACT_APP_SECRET_KEY + '/login'
+
+  const navigate = useNavigate();
 
 
   const checkfield=(e)=>{
@@ -42,8 +45,12 @@ function Login () {
 .then(response => response.json())
  
 // Displaying results to console
-.then(json => console.log(json));
-    window.location.href="/";
+.then(json => {console.log(json)
+  navigate("/")
+}
+   
+);
+    
     }
     
   }
@@ -94,7 +101,7 @@ function Login () {
             </FormControl>
 
 
-            <Button h={'16'} fontSize={'20px'} width="full" mt={4} type="submit" onClick={()=>checkfield()} >
+            <Button h={'16'} fontSize={'20px'} width="full" mt={4} type="submit" onClick={(e)=>checkfield(e)} >
               submit
             </Button>
           </form>

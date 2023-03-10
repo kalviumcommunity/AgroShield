@@ -16,7 +16,7 @@ function Form() {
   const [username,setname] = useState('');
   const [image,setimage] = useState('');
 
-   const USERINPUT = process.env.REACT_APP_USERINPUT
+   const USERINPUT = process.env.REACT_APP_SECRET_KEY + '/userinput'
 
   const checkfield=(e)=>{
     e.preventDefault();

@@ -11,7 +11,7 @@ function Signup () {
   const [email, setemail] = useState('');
   const [password,setpassword] = useState('');
 
-  const SIGNUP=process.env.REACT_APP_SIGNUP
+  const SIGNUP=process.env.REACT_APP_SECRET_KEY + '/signup'
 
   const checkfield=(e)=>{
     e.preventDefault();

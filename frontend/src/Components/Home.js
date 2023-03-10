@@ -13,7 +13,7 @@ function Home(props) {
   const [temporary,setTemporary] = useState([]);
   const [apidata, setdata] = useState([])
 
-  const API=process.env.REACT_APP_SECRET_KEY
+  const API=process.env.REACT_APP_SECRET_KEY + '/userinput'
 
 
   useEffect(()=>{
