@@ -11,12 +11,12 @@ function Signup () {
   const [email, setemail] = useState('');
   const [password,setpassword] = useState('');
 
-
+  const SIGNUP=process.env.REACT_APP_SIGNUP
 
   const checkfield=(e)=>{
     e.preventDefault();
     if( email!=="" && password!=="" ){
-    fetch("http://localhost:2000/signup", {
+    fetch(SIGNUP, {
      
     // Adding method type
     method: "POST",

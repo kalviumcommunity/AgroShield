@@ -16,6 +16,7 @@ function Form() {
   const [username,setname] = useState('');
   const [image,setimage] = useState('');
 
+   const USERINPUT = process.env.REACT_APP_USERINPUT
 
   const checkfield=(e)=>{
     e.preventDefault();
@@ -25,7 +26,7 @@ function Form() {
     // console.log("Type",type);
     // console.log("dosease",diseasename);
     // console.log("Username",username);
-    fetch("http://localhost:2000/userinput", {
+    fetch(USERINPUT, {
      
     // Adding method type
     method: "POST",

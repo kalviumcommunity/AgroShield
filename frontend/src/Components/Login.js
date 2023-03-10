@@ -13,12 +13,13 @@ function Login () {
   const [password,setpassword] = useState('');
   const [confirmpassword,setconfirmpassword] = useState('');
 
+  const LOGIN=process.env.REACT_APP_LOGIN
 
 
   const checkfield=(e)=>{
     e.preventDefault();
     if(username!=="" && email!=="" && password!=="" && confirmpassword!=="" && password===confirmpassword){
-    fetch("http://localhost:2000/login", {
+    fetch(LOGIN, {
      
     // Adding method type
     method: "POST",
