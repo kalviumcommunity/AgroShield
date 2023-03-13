@@ -1,25 +1,24 @@
 const mongoose = require("mongoose");
 
 const channelModel =  new mongoose.Schema({
-    cropName:{
+    name:{
         type:String,
         required:true,
         trim: true
     },
-    Fungicide:{
+    email:{
         type:String,
         required: true,
         trim:true,
     },
-    Disease:{
-        type:String,
+    password:{
+        type:String,Number,
         required: true,
         trim:true,
     }
-    
 });
 
 
-const ChannelModel = mongoose.model("fungicide",channelModel)
+const ChannelModel = mongoose.model("userdetail",channelModel)
 
 module.exports = ChannelModel;

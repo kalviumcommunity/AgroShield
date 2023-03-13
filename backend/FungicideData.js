@@ -25,10 +25,15 @@ const channelModel =  new mongoose.Schema({
         type:String,
         required:true,
         trim:true,
-    }
+    },
+    image:{
+        type:String,
+        required:true,
+        trim:true,
+    } 
 });
 
 
-const ChannelModel = mongoose.model("userdetail",channelModel)
+const ChannelModel = mongoose.model("userfungicide",channelModel)
 
 module.exports = ChannelModel;

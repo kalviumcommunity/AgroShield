@@ -1,11 +1,13 @@
 
 
 
-import { Flex, Input,Box,Heading,FormControl,FormLabel,Button } from '@chakra-ui/react'
+import { Flex, Input,Box,Heading,FormControl,FormLabel,Button, Image } from '@chakra-ui/react'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import React from 'react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import photo from '../assests/agrologo_-_Copy-removebg-preview.png'
 
 function Form() {
 
@@ -14,17 +16,19 @@ function Form() {
   const [type,settype] = useState('');
   const [diseasename,setdisease] = useState('');
   const [username,setname] = useState('');
+  const [image,setimage] = useState('');
 
+   const USERINPUT = process.env.REACT_APP_SECRET_KEY + '/userinput'
 
   const checkfield=(e)=>{
     e.preventDefault();
-    if(Crop!="" && medicine!="" && type!="" && username!="" && diseasename!=""){
+    if(Crop!="" && medicine!="" && type!="" && username!="" &&  image!="" && diseasename!=""){
     // console.log("cropname",Crop);
     // console.log("Medicine Name",medicine);
     // console.log("Type",type);
     // console.log("dosease",diseasename);
     // console.log("Username",username);
-    fetch("http://localhost:2000/userinput", {
+    fetch(USERINPUT, {
      
     // Adding method type
     method: "POST",
@@ -36,6 +40,7 @@ function Form() {
       "solution":medicine,
       "UserName":username,
       "type":type,
+      "image":image,
   }),
      
     // Adding headers to the request
@@ -60,7 +65,12 @@ function Form() {
   return (
     <div >
 
-<Navbar/>
+{/* <Navbar/> */}
+<Box>
+      <Link to="/home" className="logo" id="websiteName">
+          <Image  h={'5rem'}  src={photo} alt='logo'  />
+      </Link>
+      </Box>
 <Flex fontSize={'15px'} width="full" align="center" justifyContent="center">
       <Box fontSize={'15px'} p={2}>
         <Box  textAlign="center">
@@ -85,11 +95,12 @@ function Form() {
             <FormControl mb={'10'} >
               <FormLabel fontSize={'20px'}  >Type of Medicine</FormLabel>
               <select onChange={(e)=>settype(e.target.value)} >
-            <option value="Pesticide">Pesticide</option>
-            <option value="Herbicide">Herbicide</option>
-            <option value="Fungicide">Fungicide</option>
-            <option value="Bio-Fungicide">Bio-Fungicide</option>
-            <option value="Bio-insecticide">Bio-insecticide</option>
+                <option value="">Select the type</option>
+            <option value="insecticide">Insecticide</option>
+            <option value="herbicide">Herbicide</option>
+            <option value="fungicide">Fungicide</option>
+            <option value="biofungicide">Bio-Fungicide</option>
+            <option value="bioinsecticide">Bio-Insecticide</option>
               </select>
             </FormControl>
 
@@ -99,6 +110,12 @@ function Form() {
             <FormControl mb={'10'} >
               <FormLabel fontSize={'20px'} >Disease Name</FormLabel>
               <Input onChange={(e)=>setdisease(e.target.value)} h={'16'} size={'lg'} type={'text'}  placeholder="Type Disease Name..." />
+            </FormControl>
+
+
+            <FormControl mb={'10'} >
+              <FormLabel fontSize={'20px'} >Disease Image</FormLabel>
+              <Input onChange={(e)=>setimage(e.target.value)} h={'16'} size={'lg'} type={'text'}  placeholder="Paste the image link here..." />
             </FormControl>
 
 
