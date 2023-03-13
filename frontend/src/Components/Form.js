@@ -7,7 +7,7 @@ import Footer from './Footer'
 import React from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import photo from '../assests/agrologo_-_Copy-removebg-preview.png'
+import photo from '../assests/logo.png'
 
 function Form() {
 

@@ -2,7 +2,7 @@ import "./navbar&footer.css";
 import { FaSearch, FaHome, FaTags, FaComments, FaList, FaPlus } from "react-icons/fa";
 import Home from "./Home";
 import { Box, Button, Card, CardBody, Flex, Image, Input } from "@chakra-ui/react";
-import image from '../assests/agrologo_-_Copy-removebg-preview.png'
+import image from '../assests/logo.png'
 import { useState,useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 

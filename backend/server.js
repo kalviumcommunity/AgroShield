@@ -1,4 +1,5 @@
 const dotenv = require("dotenv")
+const { OAuth2Client } = require('google-auth-library');
 const mongoose = require("mongoose");
 const cors = require("cors");
 const express = require("express");
@@ -25,6 +26,7 @@ dotenv.config({path:'./config.env'});
 const DB=process.env.DATABASE;
 const PORT=process.env.PORT;
 const KEY=process.env.KEY;
+const ID=process.env.ID;
 
 mongoose.connect(DB,{
     useNewUrlParser: true, 
@@ -85,6 +87,45 @@ app.post("/userinput",(req,res)=>{
 
 })
 
+const client = new OAuth2Client(ID);
+
+app.post("/token", async (req, res) => {
+    const { tokenold } = req.body;
+  
+    const ticket = await client.verifyIdToken({
+      idToken: tokenold,
+      audience: ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    const check = await ChannelModel.findOne({ email: email });
+    if (!check) {
+      // create new account in database
+      const name = payload.name;
+      const email = payload.email;
+  
+      const detail = new ChannelModel();
+      detail.name = name;
+      detail.email = email;
+      detail.withgoogle = true;
+  
+      detail.save(async (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          // send response once database operation is complete
+          res.send({ "name": payload.name, "email": payload.email });
+        }
+      });
+    } else {
+      const token = jwd.sign({
+        email: check.email,
+        name: check.name,
+      }, KEY);
+      res.json({ status: "signed in successfully", user: token });
+    }
+  });
+
 
 
 app.post("/login",async (req,res)=>{
@@ -117,12 +158,12 @@ app.post("/signup", async (req,res)=>{
 
     const check = await ChannelModel.findOne({email:email});
 
-    const ispasswordvalid= await bcrypt.compare(password,check.password);
-
     if(!check){
         return  {status:"Please check email and password",user:null}
     }
 
+    if(check.password){
+    const ispasswordvalid= await bcrypt.compare(password,check.password);
     if(ispasswordvalid){
         const token=jwd.sign({
             email:check.email,
@@ -130,10 +171,18 @@ app.post("/signup", async (req,res)=>{
         },KEY)
         res.json({status:"signed in successfully",user:token})
     }
-    else{
+    else{   
         res.json({status:"Please check email and password",user:null})
     }
-    // console.log(check)
+}
+
+     if(check.withgoogle){
+        const token=jwd.sign({
+            email:check.email,
+            password:check.password
+        },KEY)
+        res.json({status:"signed in successfully",user:token})
+    }
 
 })
 
