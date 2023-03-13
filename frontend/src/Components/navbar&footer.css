@@ -16,6 +16,7 @@
 
 #search-box{
     color: white;
+    border-radius: 5rem;
 }
 
 *{
@@ -52,8 +53,10 @@ html{
     margin-left: 3rem;
 }
 
+
+
  .header-1{
-    background:#418949;
+    background:white;
     padding: 1rem;
     display: flex;
     align-items: center;
@@ -98,10 +101,9 @@ html{
     height:5rem;
     border:var(--border);
     overflow: hidden;
-    background:#ffffff;
     display:flex;
     align-items: center;
-    border-radius: .5rem;
+    border-radius: 5rem;
 }
 
  .search-form input{
@@ -141,7 +143,8 @@ html{
 }
 
  .header-2{
-    background:var(--green);
+    /* background:var(--green); */
+    margin-top: 2rem;
 }
  .navbar{
     justify-content: center;
@@ -209,7 +212,7 @@ html{
     text-align: center;
     background:var(--green);
     position: fixed;
-    bottom:50px; left:0; right:0;
+    bottom:0px; left:0; right:0;
     z-index: 1000;
     display: none;
     height: 7%;

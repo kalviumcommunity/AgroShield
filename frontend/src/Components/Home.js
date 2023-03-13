@@ -64,7 +64,7 @@ useEffect(() => {
       }
       else{
         return (
-          (value)?
+          (props.name)?
           <>
 
           <SimpleGrid mt={20} p="15px" spacing={10} minChildWidth="350px" >

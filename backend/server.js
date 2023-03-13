@@ -24,6 +24,7 @@ mongoose.set('strictQuery', false);
 dotenv.config({path:'./config.env'});
 const DB=process.env.DATABASE;
 const PORT=process.env.PORT;
+const KEY=process.env.KEY;
 
 mongoose.connect(DB,{
     useNewUrlParser: true, 
@@ -87,14 +88,13 @@ app.post("/userinput",(req,res)=>{
 
 
 app.post("/login",async (req,res)=>{
-    const {name,email,password,confirmpassword} = req.body;
+    const {name,email,password} = req.body;
     const newpassword= await bcrypt.hash(password,10);
 
     const detail = new ChannelModel()
     detail.name = name
     detail.email = email
     detail.password = newpassword
-    detail.confirmpassword = newpassword
 
 
     detail.save(async (err,data)=>{
@@ -127,7 +127,7 @@ app.post("/signup", async (req,res)=>{
         const token=jwd.sign({
             email:check.email,
             password:check.password
-        },'n8tv3222hk')
+        },KEY)
         res.json({status:"signed in successfully",user:token})
     }
     else{
@@ -150,6 +150,7 @@ app.get("/userinput",async (req,res)=>{
     const data = [...data1, ...data2,...data3,...data4,...data5];
     res.send(data);
 })
+
 
 
 

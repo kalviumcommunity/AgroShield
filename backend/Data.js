@@ -15,11 +15,6 @@ const channelModel =  new mongoose.Schema({
         type:String,Number,
         required: true,
         trim:true,
-    },
-    confirmpassword:{
-        type:String,Number,
-        required:true,
-        trim:true,
     }
 });
 
