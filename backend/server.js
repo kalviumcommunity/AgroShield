@@ -167,7 +167,8 @@ app.post("/signup", async (req,res)=>{
     if(ispasswordvalid){
         const token=jwd.sign({
             email:check.email,
-            password:check.password
+            password:check.password,
+            name:check.name
         },KEY)
         res.json({status:"signed in successfully",user:token})
     }
@@ -179,7 +180,8 @@ app.post("/signup", async (req,res)=>{
      if(check.withgoogle){
         const token=jwd.sign({
             email:check.email,
-            password:check.password
+            password:check.password,
+            name:check.name
         },KEY)
         res.json({status:"signed in successfully",user:token})
     }

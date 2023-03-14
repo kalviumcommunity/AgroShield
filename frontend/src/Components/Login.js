@@ -7,6 +7,7 @@ import React,{useEffect} from 'react'
 import { useState } from 'react'
 import { useNavigate} from "react-router-dom"
 import { FaGoogle } from 'react-icons/fa'
+import jwt_decode from 'jwt-decode'
 
 function Login () {
 
@@ -36,7 +37,9 @@ function Login () {
   .then(response => response.json())
    
   // Displaying results to console
-  .then(json => {console.log(json)
+  .then(json => {
+    const decode = jwt_decode(json.user);
+    sessionStorage.setItem("username",decode.name);
     navigate("/home")
   }
      
@@ -92,8 +95,11 @@ function Login () {
 .then(response => response.json())
  
 // Displaying results to console
-.then(json => {console.log(json)
-  navigate("/home")
+.then(json => {
+  console.log("json",json.answer.name)
+  // const decode = jwt_decode(json.user);
+    sessionStorage.setItem("username",json.answer.name);
+    navigate("/home")
 }
    
 );

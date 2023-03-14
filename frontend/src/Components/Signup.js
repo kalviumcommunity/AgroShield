@@ -8,6 +8,7 @@ import React,{useEffect} from 'react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaGoogle } from 'react-icons/fa'
+import jwt_decode from 'jwt-decode'
 
 function Signup () {
 
@@ -22,7 +23,7 @@ function Signup () {
 
 
   function handlecallbackresponse(response){
-    console.log("jwd token by google",response.credential)
+    
     fetch(TOKEN, {
      
       // Adding method type
@@ -43,7 +44,9 @@ function Signup () {
   .then(response => response.json())
    
   // Displaying results to console
-  .then(json => {console.log(json)
+  .then(json => {
+    const decode = jwt_decode(json.user);
+    sessionStorage.setItem("username",decode.name);
     navigate("/home")
   }
      
@@ -96,7 +99,9 @@ function Signup () {
 .then(json =>{
     if(json.user){
         alert("login successfully")
-        navigate('/home')
+        const decode = jwt_decode(json.user)
+        sessionStorage.setItem("username",decode.name);
+        navigate("/home")
     }
     else{
         alert("Please check your email and password")

@@ -1,13 +1,14 @@
 import "./navbar&footer.css";
 import { FaSearch, FaHome, FaTags, FaComments, FaList, FaPlus } from "react-icons/fa";
 import Home from "./Home";
-import { Box, Button, Card, CardBody, Flex, Image, Input } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, Flex, Image, Input, Spacer } from "@chakra-ui/react";
 import image from '../assests/logo.png'
 import { useState,useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 
 function Navbar() {
+  const name=sessionStorage.getItem("username");
   const [inputvalu, setinput] = useState("");
   const [medicineType,setmedicineType] = useState("");
   const homeChecker = useLocation().pathname === '/home'
@@ -102,14 +103,22 @@ function Navbar() {
   };
 
 
+
+
     return(
 <>
 <header className="header">
-<Box>
+      <Flex justifyContent={'space-between'} >
+      <Box>
       <Link to="/home" className="logo" id="websiteName">
           <Image  h={'5rem'}  src={image} alt='logo'  />
       </Link>
       </Box>
+      <Box>
+      <Flex fontSize={'2rem'} mt='1rem' mr='2rem' >{name}</Flex>
+      </Box>
+      </Flex>
+
       <Flex  alignContent={'center'} justifyContent='space-around' >
         
         <Box>     
