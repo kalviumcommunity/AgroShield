@@ -19,6 +19,7 @@ function Form() {
   const [image,setimage] = useState('');
 
    const USERINPUT = process.env.REACT_APP_SECRET_KEY + '/userinput'
+    const Token = sessionStorage.getItem("token")
 
   const checkfield=(e)=>{
     e.preventDefault();
@@ -45,6 +46,7 @@ function Form() {
      
     // Adding headers to the request
     headers: {
+      'authorization':Token,
         "Content-type": "application/json; charset=UTF-8"
     }
 })

@@ -47,6 +47,7 @@ function Signup () {
   .then(json => {
     const decode = jwt_decode(json.user);
     sessionStorage.setItem("username",decode.name);
+    sessionStorage.setItem("token",json.user);
     navigate("/home")
   }
      
@@ -97,10 +98,12 @@ function Signup () {
  
 // Displaying results to console
 .then(json =>{
+  console.log(json.user)
     if(json.user){
         alert("login successfully")
         const decode = jwt_decode(json.user)
         sessionStorage.setItem("username",decode.name);
+        sessionStorage.setItem("token",json.user);
         navigate("/home")
     }
     else{

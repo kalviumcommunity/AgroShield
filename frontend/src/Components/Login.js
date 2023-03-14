@@ -40,6 +40,7 @@ function Login () {
   .then(json => {
     const decode = jwt_decode(json.user);
     sessionStorage.setItem("username",decode.name);
+    sessionStorage.setItem("token",json.user);
     navigate("/home")
   }
      
@@ -96,10 +97,12 @@ function Login () {
  
 // Displaying results to console
 .then(json => {
-  console.log("json",json.answer.name)
-  // const decode = jwt_decode(json.user);
-    sessionStorage.setItem("username",json.answer.name);
+    
+    const decode = jwt_decode(json.user)
+    sessionStorage.setItem("username",decode.name);
+    sessionStorage.setItem("token",json.user)
     navigate("/home")
+    
 }
    
 );

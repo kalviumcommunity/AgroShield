@@ -9,16 +9,10 @@ const app = express();
 app.use(cors())
 app.use(express.json());
 
-const ChannelModel = require("./Data")
-const Fungicide = require("./FungicideData");
-const Insecticide = require("./InsecticideData");
-const Herbicide = require("./HerbicideData");
-const Biofungicide = require("./Biofungicide");
-const Bioinsecticide = require("./Bioinsecticide");
 
-// app.use("/",(req,res)=>{
-//     res.send("Connection is succesfull");
-// })
+const ObjectId = require('mongodb').ObjectId;
+const ChannelModel = require("./Data")
+const finalcrop = require('./Finalcrop');
 
 mongoose.set('strictQuery', false);
 
@@ -44,29 +38,14 @@ mongoose.connect(DB,{
 
 
 app.post("/userinput",(req,res)=>{
+    const {authorization} = req.headers;
+    if(!authorization){
+        return res.status(401).json({error:"Authorization token required"});
+    }
+    else{
     const {cropName, diseaseName, solution,UserName,type,image} = req.body;
-    let Model
-    if(type=="fungicide"){
-        Model=Fungicide
-    }
-    else if(type=="insecticide"){
-        Model=Insecticide
-    }
-    else if(type=="herbicide"){
-        Model=Herbicide
-    }
-    else if(type=="bioinsecticide"){
-        Model=Bioinsecticide
-    }
-    else if(type=="biofungicide"){
-        Model=Biofungicide
-    }
 
-    // if(!Model)
-    // {
-
-    // }
-    const model = new Model()
+    const model = new finalcrop()
     model.cropName = cropName
     model.diseaseName = diseaseName
     model.solution = solution
@@ -84,6 +63,7 @@ app.post("/userinput",(req,res)=>{
             res.status(200).send({'answer': model})
         }
     })
+}
 
 })
 
@@ -114,13 +94,19 @@ app.post("/token", async (req, res) => {
           console.log(err);
         } else {
           // send response once database operation is complete
-          res.send({ "name": payload.name, "email": payload.email });
+          const token = jwd.sign({
+            email: data.email,
+            name: data.name,
+            _id:data._id,
+          }, KEY);
+          res.json({ status: "signed in successfully", user: token });
         }
       });
     } else {
       const token = jwd.sign({
         email: check.email,
         name: check.name,
+        _id:check._id,
       }, KEY);
       res.json({ status: "signed in successfully", user: token });
     }
@@ -143,8 +129,12 @@ app.post("/login",async (req,res)=>{
             console.log(err);
         }else{
             // console.log(data);
-            
-            res.status(200).send({'answer': detail})
+            const token = jwd.sign({
+                email: data.email,
+                name: data.name,
+                _id:data._id,
+              }, KEY);
+              res.json({ status: "signed in successfully", user: token });
         }
     })
 
@@ -168,7 +158,8 @@ app.post("/signup", async (req,res)=>{
         const token=jwd.sign({
             email:check.email,
             password:check.password,
-            name:check.name
+            name:check.name,
+            _id:check._id
         },KEY)
         res.json({status:"signed in successfully",user:token})
     }
@@ -180,7 +171,7 @@ app.post("/signup", async (req,res)=>{
      if(check.withgoogle){
         const token=jwd.sign({
             email:check.email,
-            password:check.password,
+            _id:check._id,
             name:check.name
         },KEY)
         res.json({status:"signed in successfully",user:token})
@@ -192,27 +183,63 @@ app.post("/signup", async (req,res)=>{
 
 
 app.get("/userinput",async (req,res)=>{
-    const data1 = await( Fungicide.find().sort({$natural:-1}).limit()  );
-    const data2 = await( Insecticide.find().sort({$natural:-1}).limit()  );
-    const data3 = await( Biofungicide.find().sort({$natural:-1}).limit()  );
-    const data4 = await( Bioinsecticide.find().sort({$natural:-1}).limit()  );
-    const data5 = await( Herbicide.find().sort({$natural:-1}).limit()  );
+    const {authorization} = req.headers;
+    if(!authorization){
+        return res.status(401).json({error:"Authorization token required"});
+    }
+    else{
+    const data1 = await  finalcrop.find();
+    res.send(data1);
+    }
+})
 
-    const data = [...data1, ...data2,...data3,...data4,...data5];
+app.put("/image/:id", async (req, res) => {
+    const {image} = req.body;
+    const id=req.params.id;
+    const isValidObjectId = ObjectId.isValid(id);
+    const {authorization} = req.headers;
+    if(!authorization){
+        return res.status(401).json({error:"Authorization token required"});
+    }
+    if (!isValidObjectId) {
+      return res.status(400).send('Invalid ObjectId');
+    }
+    else{
+    const data = await finalcrop.findByIdAndUpdate(id,{image:image},{new:true});
     res.send(data);
-})
+    }
+  });
 
 
+  app.post('/comment/:id', async (req,res)=>{
+        const {comment}= req.body;
+        const {authorization} = req.headers;
+        const id=req.params.id;
+        const isValidObjectId = ObjectId.isValid(id);
+        if(!authorization){
+            return res.status(401).json({error:"Authorization token required"});
+        }
+        const token = authorization.split(' ')[1]
+        try{
+            const {_id} = jwd.verify(token,KEY)
+            if(isValidObjectId){
+                const data = await finalcrop.findByIdAndUpdate(id,{
+                    $push:{
+                      comment:{
+                        data:comment.data,
+                        user:_id,
+                        }
+                    }
+                },{new:true});
+                res.send(data);
+            }
+        }catch(err){
+            console.log(err)
+        }
+        if (!isValidObjectId) {
+          return res.status(400).send('Invalid ObjectId');
+        }
+        
 
-
-app.get("/fungicide",async (req,res)=>{   
-    const data = await Fungicide.find().sort({$natural:-1}).limit();
-     res.send({'answer':data});
-})
-    
-    
-    
-app.get("/insecticide",async (req,res)=>{
-        const data = await Insecticide.find().sort({$natural:-1}).limit();
-        res.send({'answer': data});
- })  
+  })
+ 
