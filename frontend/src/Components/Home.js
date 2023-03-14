@@ -8,6 +8,8 @@ import { Card,Image,Divider, Stack, CardBody, CardFooter } from '@chakra-ui/reac
 
 function Home(props) {
 
+
+
   const [render, setrender] = useState(true);
   const [search,setsearch] = useState([]);
   const [temporary,setTemporary] = useState([]);

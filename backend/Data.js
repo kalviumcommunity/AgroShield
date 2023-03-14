@@ -13,7 +13,10 @@ const channelModel =  new mongoose.Schema({
     },
     password:{
         type:String,Number,
-        required: true,
+        trim:true,
+    },
+    withgoogle:{
+        type:Boolean,
         trim:true,
     }
 });
