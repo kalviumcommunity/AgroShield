@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-import { SimpleGrid,Heading, Flex, Box } from '@chakra-ui/react';
+import { SimpleGrid,Heading, Flex, Box, Button } from '@chakra-ui/react';
 import { useState } from 'react';
 import Startpage from './Startpage';
 import { Card,Image,Divider, Stack, CardBody, CardFooter } from '@chakra-ui/react'
@@ -20,9 +20,14 @@ function Home(props) {
   const [temporary,setTemporary] = useState([]);
   const [apidata, setdata] = useState([])
 
-  const API=process.env.REACT_APP_SECRET_KEY + `/userinput?cropName=${value}`
+  const API=process.env.REACT_APP_SECRET_KEY + `/userinput?cropName=${Input}`
   
   const Token = sessionStorage.getItem("token")
+
+
+    
+
+
 
   useEffect(() => {
     fetch(API, {
@@ -47,9 +52,26 @@ function Home(props) {
         console.log(err);
         // handle error here
       })
-  }, []);
+  }, [props.triger]);
   
-  
+
+
+
+
+
+
+
+
+
+
+useEffect(() => {
+  setsearch(temporary.filter((e) => {
+           return (props.type)?props.type===e.type:e; 
+ }));
+}, [props.type]);
+
+    
+          
       if(render){
         return <Startpage/>
       }
@@ -60,7 +82,7 @@ function Home(props) {
 
           <SimpleGrid mt={20} p="15px" spacing={10} minChildWidth="350px" >
           {
-            search.map((dat, index)=>{
+            apidata.map((dat, index)=>{
               return (
                 <Card  boxShadow='2xl' p='6' rounded='md' bg='white' key={index} maxW='350px'>
                     <CardBody>
@@ -121,7 +143,7 @@ function Home(props) {
         
             
               
-        
+                
                <SimpleGrid mt={20} p="15px" spacing={10} minChildWidth="350px" >
                 {
                   apidata.map((dat, index)=>{

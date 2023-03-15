@@ -199,10 +199,15 @@ const middleware=(req,res,next)=>{
 
 app.get("/userinput", middleware, async (req, res) => {
     const { cropName } = req.query;
+    if(cropName){
     const data1 = await finalcrop.find({
       cropName: { $regex: new RegExp(`^${cropName}`, "i") },
     });
     res.send(data1);
+  }
+  else{
+    res.json({"error":"please provide data"})
+  }
   });
 
 app.put("/image/:id",middleware, async (req, res) => {

@@ -9,11 +9,18 @@ import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
   const name=sessionStorage.getItem("username");
-  const [inputvalu, setinput] = useState("");
+  const [search, setsearch] = useState(true);
   const [medicineType,setmedicineType] = useState("");
   const homeChecker = useLocation().pathname === '/home'
 
-
+  const handlesearch=()=>{
+    if(search){
+      setsearch(false);
+    }
+    else{
+      setsearch(true);
+    }
+  }
 
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -36,30 +43,60 @@ function Navbar() {
 
   
 
-  useEffect(()=>{
-    fetch(API, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + Token,
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-      .then(res=>res.json())
-      .then((data)=>{
-        setSuggestions(data);
-        setTemporary(data);
-        setIsLoading(false);
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-  },[])
+  // useEffect(()=>{
+  //   fetch(API, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Authorization': 'Bearer ' + Token,
+  //       "Content-type": "application/json; charset=UTF-8"
+  //     }
+  //   })
+  //     .then(res=>res.json())
+  //     .then((data)=>{
+  //       setSuggestions(data);
+  //       setTemporary(data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((err)=>{
+  //       console.log(err);
+  //     })
+  // },[])
 
     const handleSuggestionClick = (suggestion) => {
     // Update the input field with the selected suggestion
     setQuery(suggestion);
     setSuggestions([]);
   };
+
+
+
+
+  useEffect(() => {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+
+    const uniqueCropNames = temporary.reduce((accumulator, currentCrop) => {
+      const searchedTerm = query.toLowerCase();
+      const fullName = currentCrop.cropName.toLowerCase();
+
+      if (fullName.includes(searchedTerm) && fullName.startsWith(searchedTerm)) {
+        if (!accumulator[fullName]) {
+          accumulator[fullName] = currentCrop;
+        }
+      }
+
+
+
+      return accumulator;
+    }, {});
+
+    const filteredSuggestions = Object.values(uniqueCropNames);
+
+    setSuggestions(filteredSuggestions);
+  }, [query, temporary]);
+
 
 
 
@@ -80,33 +117,39 @@ function Navbar() {
     abc.classList.remove("skewBackGround");
   };
 
-
+  console.log(search)
 
 
     return(
 <>
 <header className="header">
-      <Flex justifyContent={'space-between'} >
+      <Flex  justifyContent={'space-between'} >
       <Box>
       <Link to="/home" className="logo" id="websiteName">
-          <Image  h={'5rem'}  src={image} alt='logo'  />
+      
+          <Image   h={'5rem'}  src={image} alt='logo'  />
       </Link>
       </Box>
       <Box>
       <Flex  alignContent={'center'} justifyContent='space-around' >
         
-        <Box>     
+        <Box>   
+          <Flex>  
            <Input
+           boxShadow='dark-lg' p='6' rounded='md' bg='white'
            type={'text'}
            fontSize={'1.5rem'}
            onChange={(e)=>handleInputChange(e)}
            value={query}
-           h={'5rem'} w={'30rem'} borderRadius='2rem' />
+           mt={'0.5rem'}
+           h={'4rem'} w={'30rem'} borderRadius='2rem 0rem 0rem 2rem' />
+           <Button fontSize={'1.4rem'} boxShadow='dark-lg' p='6' rounded='md' bg='white' w={'7rem'} mt={'0.5rem'} h={'4rem'} onClick={()=>{handlesearch()}} borderRadius='0rem 2rem 2rem 0rem' >Search</Button>
+           </Flex>
            </Box>
       </Flex>
       </Box>
       <Box>
-      <Flex fontSize={'2rem'} mt='1rem' mr='2rem' >{name}</Flex>
+      <Flex  fontSize={'2rem'} mt='1rem' mr='2rem' >{name}</Flex>
       </Box>
       </Flex>
 
@@ -115,7 +158,7 @@ function Navbar() {
 
 
 
-        {isLoading ? (
+        {/* {isLoading ? (
         <></>// Display a loading spinner when the suggestions are being filtered
       ) : (
           <Flex mr={'7rem'} justifyContent={'center'}>
@@ -128,7 +171,7 @@ function Navbar() {
             </Card>
           </Flex>
       )
-      }
+      } */}
 
 
       <Link to={'/form'} >
@@ -147,7 +190,7 @@ function Navbar() {
         (query)?
 
         <div className="header-2">
-          <nav className="navbar2">
+          {/* <nav className="navbar2">
 
           <div className="navbar-links" onClick={()=>setmedicineType("")} >
               
@@ -187,7 +230,7 @@ function Navbar() {
                  Bio-Fungicide
               
             </div>
-          </nav>
+          </nav> */}
         </div>:<></>
 
   
@@ -234,7 +277,7 @@ function Navbar() {
 
 
       {homeChecker && (
-        <Home name={query} type={medicineType} />
+        <Home triger={search} name={query} type={medicineType} />
       )}
 
       </>
