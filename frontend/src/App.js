@@ -6,13 +6,12 @@ import { Route, Routes } from 'react-router-dom';
 import Login from './Components/Login';
 import Signup from './Components/Signup';
 import Landingpage from './Components/Landingpage';
+import { LightMode } from '@chakra-ui/react';
 
 function App() {
   return (
     <div className="App">
-      {/* <Landingpage/> */}
-      {/* <Navbar/> */}
-      {/* <Home/> */}
+     
       <Routes>
         <Route path='/signup' element={<Signup/>} />
         <Route path='/login' element={<Login/>} />
@@ -21,6 +20,7 @@ function App() {
         <Route path='/form' element={<Form/>} />
       </Routes>
       <Footer/>
+      
       
     </div>
   );

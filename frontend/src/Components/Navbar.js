@@ -22,7 +22,7 @@ function Navbar() {
 
   // console.log("query",query,"suggestion",suggestions)
 
-  const API=process.env.REACT_APP_SECRET_KEY + '/userinput'
+  const API=process.env.REACT_APP_SECRET_KEY + `/userinput?cropName=${query}`
 
   const handleInputChange =  (event) => {
    
@@ -64,36 +64,6 @@ function Navbar() {
 
 
 
-  useEffect(() => {
-    if (!query) {
-      setSuggestions([]);
-      return;
-    }
-
-    const uniqueCropNames = temporary.reduce((accumulator, currentCrop) => {
-      const searchedTerm = query.toLowerCase();
-      const fullName = currentCrop.cropName.toLowerCase();
-
-      if (fullName.includes(searchedTerm) && fullName.startsWith(searchedTerm)) {
-        if (!accumulator[fullName]) {
-          accumulator[fullName] = currentCrop;
-        }
-      }
-
-
-
-      return accumulator;
-    }, {});
-
-    const filteredSuggestions = Object.values(uniqueCropNames);
-
-    setSuggestions(filteredSuggestions);
-  }, [query, temporary]);
-
-
-
-
-
 
 
   const handleSearch = () => {
@@ -123,10 +93,6 @@ function Navbar() {
       </Link>
       </Box>
       <Box>
-      <Flex fontSize={'2rem'} mt='1rem' mr='2rem' >{name}</Flex>
-      </Box>
-      </Flex>
-
       <Flex  alignContent={'center'} justifyContent='space-around' >
         
         <Box>     
@@ -135,9 +101,16 @@ function Navbar() {
            fontSize={'1.5rem'}
            onChange={(e)=>handleInputChange(e)}
            value={query}
-           h={'5rem'} w={'40rem'} borderRadius='2rem' />
+           h={'5rem'} w={'30rem'} borderRadius='2rem' />
            </Box>
       </Flex>
+      </Box>
+      <Box>
+      <Flex fontSize={'2rem'} mt='1rem' mr='2rem' >{name}</Flex>
+      </Box>
+      </Flex>
+
+      
       
 
 
@@ -145,18 +118,15 @@ function Navbar() {
         {isLoading ? (
         <></>// Display a loading spinner when the suggestions are being filtered
       ) : (
-        <Flex  justifyContent={'center'} >
-        <Card borderRadius={'0.5rem 0.5rem 0rem 0rem'} color='black' backgroundColor={'white'}  position={'fixed'} w='40rem'  zIndex={9999} cursor={'pointer'} >
-           {suggestions.map((suggestion) => (
-            <CardBody 
-            
-            _hover={{ boxShadow: "outline"  }}
-            key={suggestion._id} onClick={() => handleSuggestionClick(suggestion.cropName)}>
-              {suggestion.cropName}
-            </CardBody>
-          ))}
-        </Card>
-        </Flex>
+          <Flex mr={'7rem'} justifyContent={'center'}>
+            <Card  borderRadius={'0.5rem 0.5rem 0rem 0rem'} color='black' backgroundColor={'white'} position={'fixed'} w='30rem' zIndex={9999} cursor={'pointer'} overflow='auto'>
+              {suggestions.map((suggestion) => (
+                <CardBody _hover={{ boxShadow: "outline" }} key={suggestion._id} onClick={() => handleSuggestionClick(suggestion.cropName)}>
+                  {suggestion.cropName}
+                </CardBody>
+              ))}
+            </Card>
+          </Flex>
       )
       }
 
@@ -191,28 +161,28 @@ function Navbar() {
             className="navbar-links"
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
-            onClick={()=>setmedicineType("herbicide")}
+            onClick={()=>setmedicineType("Herbicide")}
             >
               
                 Herbicide
               
             </div>
-            <div className="navbar-links" onClick={()=>setmedicineType("fungicide")} >
+            <div className="navbar-links" onClick={()=>setmedicineType("Fungicide")} >
               
                 Fungicide
               
             </div>
-            <div className="navbar-links" onClick={()=>setmedicineType("insecticide")} >
+            <div className="navbar-links" onClick={()=>setmedicineType("Insecticide")} >
               
                 Insecticide
               
             </div>
-            <div className="navbar-links" onClick={()=>setmedicineType("bioinsecticide")} >
+            <div className="navbar-links" onClick={()=>setmedicineType("Bioinsecticide")} >
               
                  Bio-Insecticide
               
             </div>
-            <div className="navbar-links" onClick={()=>setmedicineType("biofungicide")} > 
+            <div className="navbar-links" onClick={()=>setmedicineType("Biofungicide")} > 
               
                  Bio-Fungicide
               

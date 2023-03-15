@@ -1,7 +1,7 @@
 
 
 
-import { Flex, Input,Box,Heading,FormControl,FormLabel,Button, Image } from '@chakra-ui/react'
+import { Flex, Input,Box,Heading,FormControl,FormLabel,Button, Image, DarkMode, LightMode } from '@chakra-ui/react'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import React from 'react'
@@ -68,12 +68,13 @@ function Form() {
     <div >
 
 {/* <Navbar/> */}
+
 <Box>
       <Link to="/home" className="logo" id="websiteName">
           <Image  h={'5rem'}  src={photo} alt='logo'  />
       </Link>
       </Box>
-<Flex fontSize={'15px'} width="full" align="center" justifyContent="center">
+<Flex color={'black'} fontSize={'15px'} width="full" align="center" justifyContent="center">
       <Box fontSize={'15px'} p={2}>
         <Box  textAlign="center">
           <Heading mb={'10'} fontSize={'30px'} >Information Form</Heading>
@@ -94,18 +95,21 @@ function Form() {
               <Input onChange={(e)=>setmedicine(e.target.value)} h={'16'} type={'text'} size={'lg'}  placeholder="Type Medicine name..." />
             </FormControl>
 
-            <FormControl mb={'10'} >
-              <FormLabel fontSize={'20px'}  >Type of Medicine</FormLabel>
-              <select onChange={(e)=>settype(e.target.value)} >
-                <option value="">Select the type</option>
+           
+            <FormControl  mb={'10'} >
+              <FormLabel color={'black'} bg={'white'} fontSize={'20px'}  >Type of Medicine</FormLabel>
+              <select color='black' backgroundcolor="white" onChange={(e)=>settype(e.target.value)} >
+                <LightMode>
+                <option  value="">Select the type</option>
             <option value="insecticide">Insecticide</option>
             <option value="herbicide">Herbicide</option>
             <option value="fungicide">Fungicide</option>
             <option value="biofungicide">Bio-Fungicide</option>
             <option value="bioinsecticide">Bio-Insecticide</option>
+            </LightMode>
               </select>
             </FormControl>
-
+           
            
 
 
@@ -137,6 +141,7 @@ function Form() {
 
 
        {/* <Footer/> */}
+      
     </div>
   )
 }

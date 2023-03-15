@@ -1,22 +1,27 @@
 import React, { useEffect } from 'react'
 
-import { SimpleGrid,Heading } from '@chakra-ui/react';
+import { SimpleGrid,Heading, Flex, Box } from '@chakra-ui/react';
 import { useState } from 'react';
 import Startpage from './Startpage';
 import { Card,Image,Divider, Stack, CardBody, CardFooter } from '@chakra-ui/react'
-
+import image from '../assests/blacklogo.jpg'
 
 function Home(props) {
 
 
+        const value=props.name;
+      var Input=" ";
+      if(value){
+        Input=value.toLowerCase();
+      }
 
   const [render, setrender] = useState(true);
   const [search,setsearch] = useState([]);
   const [temporary,setTemporary] = useState([]);
   const [apidata, setdata] = useState([])
 
-  const API=process.env.REACT_APP_SECRET_KEY + '/userinput'
-
+  const API=process.env.REACT_APP_SECRET_KEY + `/userinput?cropName=${value}`
+  
   const Token = sessionStorage.getItem("token")
 
   useEffect(() => {
@@ -44,33 +49,7 @@ function Home(props) {
       })
   }, []);
   
-
-
-
-const value=props.name;
-var Input=" ";
-if(value){
-   Input=value.toLowerCase();
-}
-
-
-
-
-
-
-useEffect(() => {
-  setsearch(temporary.filter((e) => {
-   const searchedTerm = Input;
-           const fullName =   e?.cropName?.toLowerCase();
-           return (props.type)?props.type==e.type && fullName.includes(searchedTerm) && fullName.startsWith(searchedTerm):fullName.includes(searchedTerm) || fullName.startsWith(searchedTerm)
-   
- 
- 
- }));
-}, [props.type,props.name]);
-
-    
-          
+  
       if(render){
         return <Startpage/>
       }
@@ -83,33 +62,45 @@ useEffect(() => {
           {
             search.map((dat, index)=>{
               return (
-                <Card key={index} maxW='350px'>
-                <CardBody>
-                  <Image
-                    h={'200px'}
-                    w='full'
-                    src={dat.image}
-                    alt='image'
-                    borderRadius='lg'
-                  />
-                  <Stack  mt='6' spacing='3'  >
-                  <Heading fontSize={'15px'} display={'flex'} size='md'>CropName : {dat.cropName}</Heading>
-      <Heading fontSize={'15px'} display={'flex'} size='md'>Type : {dat.type}</Heading>
-      <Heading fontSize={'15px'} display={'flex'} size='md'>DiseaseName : {dat.Disease}</Heading>
-      <Heading color={'green.300'} fontSize={'13px'} display={'flex'} size='md'>Solution : {dat.solution}</Heading>
-                    
-                    
-                  </Stack>
-                </CardBody>
-                <Divider />
-              
-              
-                <CardFooter>
-                <Heading  fontSize={'17px'} size='md'>UserName : {dat.UserName}</Heading>
-                </CardFooter>
-              
-              
-              </Card>
+                <Card  boxShadow='2xl' p='6' rounded='md' bg='white' key={index} maxW='350px'>
+                    <CardBody>
+                      <Image
+                      h={'200px'}
+                      w='full'
+                        src={image}
+                        alt='Green double couch with wooden legs'
+                        borderRadius='lg'
+                      />
+                      <Stack  mt='6' spacing='3'  >
+      <Flex justifyContent={'space-between'} >
+      <Box>
+      <Heading fontSize={'17px'} fontFamily={'sans-serif'} display={'flex'} size='md'>CropName</Heading>
+      <Heading fontWeight={400} fontSize={'15px'} display={'flex'} size='md'>{dat.cropName}</Heading>
+      </Box>
+      <Box>
+      <Heading fontSize={'17px'} fontFamily={'sans-serif'} display={'flex'} size='md'>Type</Heading>
+      <Heading fontWeight={400} fontSize={'15px'}  display={'flex'} size='md'>{dat.type}</Heading>
+      </Box>
+      </Flex>
+
+
+      <Heading fontSize={'17px'} fontFamily={'sans-serif'} display={'flex'} size='md'>DiseaseName</Heading>
+      <Heading fontWeight={400} fontSize={'15px'}  display={'flex'} size='md'>{dat.Disease}</Heading>
+      <Heading color={'green'} fontFamily={'sans-serif'} fontSize={'17px'} display={'flex'} size='md'>Solution</Heading>
+      <Heading fontWeight={400} color={'green'}  fontSize={'13px'} display={'flex'} size='md'>{dat.solution}</Heading>
+      
+    </Stack>
+  </CardBody>
+  <Divider variant="dashed" />
+
+  <Flex justifyContent={'flex-end'} >
+  <CardFooter>  
+  <Heading fontWeight={5} fontSize={'10px'} size='md'>UserName : {dat.UserName}</Heading>
+  </CardFooter>
+  </Flex>
+
+
+</Card>
               
               )
             })
@@ -135,31 +126,42 @@ useEffect(() => {
                 {
                   apidata.map((dat, index)=>{
                     return (
-                      <Card key={index} maxW='350px'>
-  <CardBody>
-    <Image
-    h={'200px'}
-    w='full'
-      src={dat.image}
-      alt='Green double couch with wooden legs'
-      borderRadius='lg'
-    />
-    <Stack  mt='6' spacing='3'  >
-      
-      <Heading fontSize={'15px'} display={'flex'} size='md'>CropName : {dat.cropName}</Heading>
-      <Heading fontSize={'15px'} display={'flex'} size='md'>Type : {dat.type}</Heading>
-      <Heading fontSize={'15px'} display={'flex'} size='md'>DiseaseName : {dat.Disease}</Heading>
-      <Heading color={'green.300'} fontSize={'13px'} display={'flex'} size='md'>Solution : {dat.solution}</Heading>
-      
+                      <Card  boxShadow='2xl' p='6' rounded='md' bg='white' key={index} maxW='350px'>
+                    <CardBody>
+                      <Image
+                      h={'200px'}
+                      w='full'
+                        src={image}
+                        alt='Green double couch with wooden legs'
+                        borderRadius='lg'
+                      />
+                      <Stack  mt='6' spacing='3'  >
+      <Flex justifyContent={'space-between'} >
+      <Box>
+      <Heading fontSize={'17px'} fontFamily={'sans-serif'} display={'flex'} size='md'>CropName</Heading>
+      <Heading fontWeight={400} fontSize={'15px'} display={'flex'} size='md'>{dat.cropName}</Heading>
+      </Box>
+      <Box>
+      <Heading fontSize={'17px'} fontFamily={'sans-serif'} display={'flex'} size='md'>Type</Heading>
+      <Heading fontWeight={400} fontSize={'15px'}  display={'flex'} size='md'>{dat.type}</Heading>
+      </Box>
+      </Flex>
+
+
+      <Heading fontSize={'17px'} fontFamily={'sans-serif'} display={'flex'} size='md'>DiseaseName</Heading>
+      <Heading fontWeight={400} fontSize={'15px'}  display={'flex'} size='md'>{dat.Disease}</Heading>
+      <Heading color={'green'} fontFamily={'sans-serif'} fontSize={'17px'} display={'flex'} size='md'>Solution</Heading>
+      <Heading fontWeight={400} color={'green'}  fontSize={'13px'} display={'flex'} size='md'>{dat.solution}</Heading>
       
     </Stack>
   </CardBody>
-  <Divider />
+  <Divider variant="dashed" />
 
-
-  <CardFooter>
-  <Heading  fontSize={'17px'} size='md'>UserName : {dat.UserName}</Heading>
+  <Flex justifyContent={'flex-end'} >
+  <CardFooter>  
+  <Heading fontWeight={5} fontSize={'10px'} size='md'>UserName : {dat.UserName}</Heading>
   </CardFooter>
+  </Flex>
 
 
 </Card>

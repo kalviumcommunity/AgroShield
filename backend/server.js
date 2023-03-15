@@ -197,10 +197,13 @@ const middleware=(req,res,next)=>{
 }
 
 
-app.get("/userinput", middleware ,async (req,res)=>{
-    const data1 = await  finalcrop.find();
-    res.send(data1); 
-})
+app.get("/userinput", middleware, async (req, res) => {
+    const { cropName } = req.query;
+    const data1 = await finalcrop.find({
+      cropName: { $regex: new RegExp(`^${cropName}`, "i") },
+    });
+    res.send(data1);
+  });
 
 app.put("/image/:id",middleware, async (req, res) => {
     const {image} = req.body;
