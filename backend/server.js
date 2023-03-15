@@ -180,27 +180,26 @@ app.post("/signup", async (req,res)=>{
 })
 
 
-
-
-app.get("/userinput",async (req,res)=>{
+const middleware=(req,res,next)=>{
     const {authorization} = req.headers;
     if(!authorization){
         return res.status(401).json({error:"Authorization token required"});
     }
     else{
-    const data1 = await  finalcrop.find();
-    res.send(data1);
+        next();
     }
+}
+
+
+app.get("/userinput", middleware ,async (req,res)=>{
+    const data1 = await  finalcrop.find();
+    res.send(data1); 
 })
 
-app.put("/image/:id", async (req, res) => {
+app.put("/image/:id",middleware, async (req, res) => {
     const {image} = req.body;
     const id=req.params.id;
     const isValidObjectId = ObjectId.isValid(id);
-    const {authorization} = req.headers;
-    if(!authorization){
-        return res.status(401).json({error:"Authorization token required"});
-    }
     if (!isValidObjectId) {
       return res.status(400).send('Invalid ObjectId');
     }
@@ -211,14 +210,10 @@ app.put("/image/:id", async (req, res) => {
   });
 
 
-  app.post('/comment/:id', async (req,res)=>{
+  app.post('/comment/:id',middleware, async (req,res)=>{
         const {comment}= req.body;
-        const {authorization} = req.headers;
         const id=req.params.id;
         const isValidObjectId = ObjectId.isValid(id);
-        if(!authorization){
-            return res.status(401).json({error:"Authorization token required"});
-        }
         const token = authorization.split(' ')[1]
         try{
             const {_id} = jwd.verify(token,KEY)
