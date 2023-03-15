@@ -183,11 +183,17 @@ app.post("/signup", async (req,res)=>{
 const middleware=(req,res,next)=>{
     const {authorization} = req.headers;
     if(!authorization){
-        return res.status(401).json({error:"Authorization token required"});
+        res.send({"error":"authorization is required"})
     }
-    else{
-        next();
+    const token = authorization.split(' ')[1]
+    try{
+        const {_id} = jwd.verify(token,KEY)
+        next()
     }
+    catch(err){
+        res.send({"error":"token is required"})
+    }
+    
 }
 
 
