@@ -46,7 +46,7 @@ function Form() {
      
     // Adding headers to the request
     headers: {
-      'authorization':Token,
+      'Authorization': 'Bearer ' + Token,
         "Content-type": "application/json; charset=UTF-8"
     }
 })

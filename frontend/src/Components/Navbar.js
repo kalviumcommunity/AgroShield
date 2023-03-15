@@ -32,10 +32,18 @@ function Navbar() {
 
   };
 
+  const Token=sessionStorage.getItem("token")
+
   
 
   useEffect(()=>{
-    fetch(API)
+    fetch(API, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + Token,
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
       .then(res=>res.json())
       .then((data)=>{
         setSuggestions(data);

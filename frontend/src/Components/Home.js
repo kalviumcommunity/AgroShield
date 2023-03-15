@@ -17,22 +17,32 @@ function Home(props) {
 
   const API=process.env.REACT_APP_SECRET_KEY + '/userinput'
 
+  const Token = sessionStorage.getItem("token")
 
-  useEffect(()=>{
-    fetch(API).then(res => res.json())
-      .then((data)=>{
+  useEffect(() => {
+    fetch(API, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + Token,
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(res.status);
+        }
+        return res.json();
+      })
+      .then(data => {
         setdata(data);
         setTemporary(data);
-        // setTimeout(() => {
-        //   setrender(false);
-        // }, 3000);
         setrender(false);
-        
-
-      }).catch((err)=>{
-        console.log(err);
       })
-  },[]);
+      .catch(err => {
+        console.log(err);
+        // handle error here
+      })
+  }, []);
   
 
 
@@ -85,7 +95,7 @@ useEffect(() => {
                   <Stack  mt='6' spacing='3'  >
                   <Heading fontSize={'15px'} display={'flex'} size='md'>CropName : {dat.cropName}</Heading>
       <Heading fontSize={'15px'} display={'flex'} size='md'>Type : {dat.type}</Heading>
-      <Heading fontSize={'15px'} display={'flex'} size='md'>DiseaseName : {dat.diseaseName}</Heading>
+      <Heading fontSize={'15px'} display={'flex'} size='md'>DiseaseName : {dat.Disease}</Heading>
       <Heading color={'green.300'} fontSize={'13px'} display={'flex'} size='md'>Solution : {dat.solution}</Heading>
                     
                     
@@ -138,7 +148,7 @@ useEffect(() => {
       
       <Heading fontSize={'15px'} display={'flex'} size='md'>CropName : {dat.cropName}</Heading>
       <Heading fontSize={'15px'} display={'flex'} size='md'>Type : {dat.type}</Heading>
-      <Heading fontSize={'15px'} display={'flex'} size='md'>DiseaseName : {dat.diseaseName}</Heading>
+      <Heading fontSize={'15px'} display={'flex'} size='md'>DiseaseName : {dat.Disease}</Heading>
       <Heading color={'green.300'} fontSize={'13px'} display={'flex'} size='md'>Solution : {dat.solution}</Heading>
       
       
