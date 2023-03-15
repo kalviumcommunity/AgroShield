@@ -2,20 +2,71 @@
 
 
 import { Flex, Input,Box,Heading,FormControl,FormLabel,Button, Image } from '@chakra-ui/react'
-import Navbar from './Navbar'
-import image from '../assests/agrologo_-_Copy-removebg-preview.png'
-import React from 'react'
+import image from '../assests/logo.png'
+import React,{useEffect} from 'react'
 import { useState } from 'react'
-import {Link, useNavigate} from "react-router-dom"
+import { useNavigate} from "react-router-dom"
 import { FaGoogle } from 'react-icons/fa'
+import jwt_decode from 'jwt-decode'
 
 function Login () {
+
+  const LOGIN=process.env.REACT_APP_SECRET_KEY + '/login'
+  const ID=process.env.REACT_APP_KEY
+  const TOKEN = process.env.REACT_APP_SECRET_KEY + '/token'
+
+  function handlecallbackresponse(response){
+    
+    fetch(TOKEN, {
+     
+      // Adding method type
+      method: "POST",
+       
+      // Adding body or contents to send
+      body: JSON.stringify({
+        "tokenold":response.credential
+    }),
+       
+      // Adding headers to the request
+      headers: {
+          "Content-type": "application/json; charset=UTF-8"
+      }
+  })
+   
+  // Converting to JSON
+  .then(response => response.json())
+   
+  // Displaying results to console
+  .then(json => {
+    const decode = jwt_decode(json.user);
+    sessionStorage.setItem("username",decode.name);
+    sessionStorage.setItem("token",json.user);
+    navigate("/home")
+  }
+     
+  );
+  }
+
+  useEffect(()=>{
+    /* global google */
+    google.accounts.id.initialize({
+      client_id:ID,
+      callback: handlecallbackresponse
+    })
+
+    google.accounts.id.renderButton(
+      document.getElementById("signindiv"),
+      {size:"medium"}
+    );
+
+
+  },[])
 
   const [username,setusername] = useState('');
   const [email, setemail] = useState('');
   const [password,setpassword] = useState('');
 
-  const LOGIN=process.env.REACT_APP_SECRET_KEY + '/login'
+
 
   const navigate = useNavigate();
 
@@ -45,8 +96,13 @@ function Login () {
 .then(response => response.json())
  
 // Displaying results to console
-.then(json => {console.log(json)
-  navigate("/home")
+.then(json => {
+    
+    const decode = jwt_decode(json.user)
+    sessionStorage.setItem("username",decode.name);
+    sessionStorage.setItem("token",json.user)
+    navigate("/home")
+    
 }
    
 );
@@ -123,7 +179,7 @@ function Login () {
               Continue
             </Button>
             <Flex justifyContent={'center'}  fontSize='1.5rem' > OR</Flex>
-            <Button leftIcon={<FaGoogle/>} borderRadius={'2rem'} h={'16'} fontSize={'1.5rem'} width="full" mt={4} type="submit" >
+            <Button id='signindiv' leftIcon={<FaGoogle/>} borderRadius={'2rem'} h={'16'} fontSize={'1.5rem'} width="full" mt={4} type="submit" >
               Continue with Google
             </Button>
           </form>

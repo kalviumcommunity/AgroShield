@@ -7,7 +7,7 @@ import Footer from './Footer'
 import React from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import photo from '../assests/agrologo_-_Copy-removebg-preview.png'
+import photo from '../assests/logo.png'
 
 function Form() {
 
@@ -19,6 +19,7 @@ function Form() {
   const [image,setimage] = useState('');
 
    const USERINPUT = process.env.REACT_APP_SECRET_KEY + '/userinput'
+    const Token = sessionStorage.getItem("token")
 
   const checkfield=(e)=>{
     e.preventDefault();
@@ -45,6 +46,7 @@ function Form() {
      
     // Adding headers to the request
     headers: {
+      'Authorization': 'Bearer ' + Token,
         "Content-type": "application/json; charset=UTF-8"
     }
 })

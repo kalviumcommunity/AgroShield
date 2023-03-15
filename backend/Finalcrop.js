@@ -30,10 +30,22 @@ const channelModel =  new mongoose.Schema({
         type:String,
         required:true,
         trim:true,
-    } 
+    },
+    comment:[
+        {
+        data:{
+            type:String,
+            trim:true,
+        },
+        user:{
+            type:mongoose.Types.ObjectId,
+            ref:"userdetails",
+        }
+    }
+    ]
 });
 
 
-const ChannelModel = mongoose.model("userfungicide",channelModel)
+const ChannelModel = mongoose.model("finalcrop",channelModel)
 
 module.exports = ChannelModel;
