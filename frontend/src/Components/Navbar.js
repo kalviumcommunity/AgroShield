@@ -1,17 +1,22 @@
 import "./navbar&footer.css";
-import { FaSearch, FaHome, FaTags, FaComments, FaList, FaPlus } from "react-icons/fa";
+import {FaPlus } from "react-icons/fa";
 import Home from "./Home";
-import { Box, Button, Card, CardBody, Flex, Image, Input, Spacer } from "@chakra-ui/react";
-import image from '../assests/logo.png'
+import { Box, Button, Card, CardBody, Flex, Image, Input } from "@chakra-ui/react";
+import image from '../assests/finallogo.png'
 import { useState,useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import ImageCarousel from "./Crausal";
 
 
 function Navbar() {
   const name=sessionStorage.getItem("username");
-  const [search, setsearch] = useState(true);
+  const [search, setsearch] = useState(null);
   const [medicineType,setmedicineType] = useState("");
   const homeChecker = useLocation().pathname === '/home'
+  const Landingpagechecker = useLocation().pathname === '/'
+  const Formpagechecker = useLocation().pathname === '/form'
+
+
 
   const handlesearch=()=>{
     if(search){
@@ -25,99 +30,99 @@ function Navbar() {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [temporary,setTemporary] = useState([]);
+  const [homepagedata,sethomepagedata] = useState([]);
   const [isLoading,setIsLoading] = useState(true);
-
-  // console.log("query",query,"suggestion",suggestions)
 
   const API=process.env.REACT_APP_SECRET_KEY + `/userinput?cropName=${query}`
 
-  const handleInputChange =  (event) => {
-   
-
-    setQuery(event.target.value);
-
-
-  };
 
   const Token=sessionStorage.getItem("token")
 
   
 
-  // useEffect(()=>{
-  //   fetch(API, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Authorization': 'Bearer ' + Token,
-  //       "Content-type": "application/json; charset=UTF-8"
-  //     }
-  //   })
-  //     .then(res=>res.json())
-  //     .then((data)=>{
-  //       setSuggestions(data);
-  //       setTemporary(data);
-  //       setIsLoading(false);
-  //     })
-  //     .catch((err)=>{
-  //       console.log(err);
-  //     })
-  // },[])
+  useEffect(()=>{
+    fetch(API, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + Token,
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+      .then(res=>res.json())
+      .then((data)=>{
+        setSuggestions(data);
+        setTemporary(data);
+        setIsLoading(false);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+  },[query])
+
+
+  useEffect(()=>{
+    fetch(API, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + Token,
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+      .then(res=>res.json())
+      .then((data)=>{
+        setSuggestions(data);
+        setTemporary(data);
+        setIsLoading(false);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+  },[homeChecker])
+
+
+
+
+  useEffect(()=>{
+    fetch(API, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + Token,
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+      .then(res=>res.json())
+      .then((data)=>{
+        sethomepagedata(data);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+  },[search])
+
+  const handlefilter=()=>{
+
+    if(document.getElementById('filter').style.display==='none'){
+      document.getElementById('filter').style.display='flex'
+    }
+    else{
+      document.getElementById('filter').style.display='none'
+    }
+  }
 
     const handleSuggestionClick = (suggestion) => {
     // Update the input field with the selected suggestion
     setQuery(suggestion);
-    setSuggestions([]);
+    handlesearch();
+    document.getElementById('suggest').style.display='none'
   };
 
 
+  if(Landingpagechecker){
+    return<></>
+  }
+  else{
 
-
-  useEffect(() => {
-    if (!query) {
-      setSuggestions([]);
-      return;
-    }
-
-    const uniqueCropNames = temporary.reduce((accumulator, currentCrop) => {
-      const searchedTerm = query.toLowerCase();
-      const fullName = currentCrop.cropName.toLowerCase();
-
-      if (fullName.includes(searchedTerm) && fullName.startsWith(searchedTerm)) {
-        if (!accumulator[fullName]) {
-          accumulator[fullName] = currentCrop;
-        }
-      }
-
-
-
-      return accumulator;
-    }, {});
-
-    const filteredSuggestions = Object.values(uniqueCropNames);
-
-    setSuggestions(filteredSuggestions);
-  }, [query, temporary]);
-
-
-
-
-
-
-
-  const handleSearch = () => {
-    const searchForm = document.querySelector(".search-form");
-    searchForm.classList.toggle("active");
-  };
-
-  const handleHoverEnter = () => {
-    const abc = document.getElementById("navbar-links");
-    abc.classList.add("skewBackGround");
-  };
-  const handleHoverLeave = () => {
-    const abc = document.getElementById("navbar-links");
-    abc.classList.remove("skewBackGround");
-  };
-
-  console.log(search)
+  
 
 
     return(
@@ -134,12 +139,12 @@ function Navbar() {
       <Flex  alignContent={'center'} justifyContent='space-around' >
         
         <Box>   
-          <Flex>  
+          <Flex w={'30rem'} >  
            <Input
            boxShadow='dark-lg' p='6' rounded='md' bg='white'
            type={'text'}
            fontSize={'1.5rem'}
-           onChange={(e)=>handleInputChange(e)}
+           onChange={(e)=>setQuery(e.target.value)}
            value={query}
            mt={'0.5rem'}
            h={'4rem'} w={'30rem'} borderRadius='2rem 0rem 0rem 2rem' />
@@ -153,25 +158,36 @@ function Navbar() {
       </Box>
       </Flex>
 
+      {
+        (homepagedata.length>0 || Formpagechecker )?(
+          <></>
+        ):(
+          <ImageCarousel/>
+        )
+      }
+
       
       
 
 
 
-        {/* {isLoading ? (
+        {
+          
+        isLoading? (
         <></>// Display a loading spinner when the suggestions are being filtered
       ) : (
-          <Flex mr={'7rem'} justifyContent={'center'}>
-            <Card  borderRadius={'0.5rem 0.5rem 0rem 0rem'} color='black' backgroundColor={'white'} position={'fixed'} w='30rem' zIndex={9999} cursor={'pointer'} overflow='auto'>
+        (suggestions.length>0)?
+          <Flex id="suggest" mr={'7rem'} justifyContent={'center'}>
+            <Card h={'30rem'}  borderRadius={'0.5rem 0.5rem 0rem 0rem'} color='black' backgroundColor={'white'} position={'fixed'} w='30rem' zIndex={9999} cursor={'pointer'} overflow='auto'>
               {suggestions.map((suggestion) => (
                 <CardBody _hover={{ boxShadow: "outline" }} key={suggestion._id} onClick={() => handleSuggestionClick(suggestion.cropName)}>
                   {suggestion.cropName}
                 </CardBody>
               ))}
             </Card>
-          </Flex>
+          </Flex>:<> </>
       )
-      } */}
+      }
 
 
       <Link to={'/form'} >
@@ -182,60 +198,41 @@ function Navbar() {
       </Link>
 
         
+      <Button
+      onClick={()=>handlefilter()}
+      _hover={{ backgroundColor: "black",color:'white' }}
+      borderRadius={'5rem'}  h={'5rem'} w={'5rem'} top={'8rem'}  left='2rem' position={'fixed'}  >
+        Filter
+      </Button>
+
+
+        
+
+       
+        <Flex id="filter" _hover={{cursor:'pointer'}} mt={'10rem'} ml={'2rem'} justifyContent={'left'} >
+          <Box mr={'1rem'} onClick={()=>setmedicineType("")} >
+            All
+          </Box>
+          <Box mr={'1rem'} onClick={()=>setmedicineType("Herbicide")} >
+            Herb
+          </Box>
+          <Box mr={'1rem'} onClick={()=>setmedicineType("Insecticide")} >
+            Insect
+          </Box>
+          <Box mr={'1rem'} onClick={()=>setmedicineType("Fungicide")}  >
+            Fung
+          </Box>
+          <Box mr={'1rem'} onClick={()=>setmedicineType("Bioinsecticide")} >
+            Bio-insect
+          </Box>
+          <Box onClick={()=>setmedicineType("Biofungicide")}  >
+            Bio-fung
+          </Box>
+        </Flex>
 
 
 
-        {
 
-        (query)?
-
-        <div className="header-2">
-          {/* <nav className="navbar2">
-
-          <div className="navbar-links" onClick={()=>setmedicineType("")} >
-              
-              All
-            
-          </div>
-
-
-            <div
-            id="navbar-links"
-            className="navbar-links"
-            onMouseEnter={handleHoverEnter}
-            onMouseLeave={handleHoverLeave}
-            onClick={()=>setmedicineType("Herbicide")}
-            >
-              
-                Herbicide
-              
-            </div>
-            <div className="navbar-links" onClick={()=>setmedicineType("Fungicide")} >
-              
-                Fungicide
-              
-            </div>
-            <div className="navbar-links" onClick={()=>setmedicineType("Insecticide")} >
-              
-                Insecticide
-              
-            </div>
-            <div className="navbar-links" onClick={()=>setmedicineType("Bioinsecticide")} >
-              
-                 Bio-Insecticide
-              
-            </div>
-            <div className="navbar-links" onClick={()=>setmedicineType("Biofungicide")} > 
-              
-                 Bio-Fungicide
-              
-            </div>
-          </nav> */}
-        </div>:<></>
-
-  
-
-}
 
 
 
@@ -243,41 +240,14 @@ function Navbar() {
 
       </header>
 
-{
-      (query)?
 
-      <nav className="bottom-navbar2">
-      <div onClick={()=>setmedicineType("")}  >
-          All
-        </div>
-        <div onClick={()=>setmedicineType("herbicide")}  >
-          Herb
-        </div>
-        <div onClick={()=>setmedicineType("fungicide")}  >
-          Fungi
-        </div>
-        <div onClick={()=>setmedicineType("insecticide")}  >
-          Insecti
-        </div>
-        <div onClick={()=>setmedicineType("biofungicide")}  >
-          Biofungi
-        </div>
-        <div onClick={()=>setmedicineType("bioinsecticide")}  >
-          Bioinsecti
-        </div>
-      </nav>
-  
-  :
-<></>
-
-}
 
 
 
 
 
       {homeChecker && (
-        <Home triger={search} name={query} type={medicineType} />
+        <Home data={homepagedata} triger={search} name={query} type={medicineType} />
       )}
 
       </>
@@ -287,7 +257,7 @@ function Navbar() {
 
 
 
-
+      }
 
 
 

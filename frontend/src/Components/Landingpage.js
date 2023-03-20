@@ -14,36 +14,31 @@ function Landingpage() {
   return (
     <div id='main' >
       <div id='image'  >
-      <Flex color={'blue.800'}  cursor={'pointer'} fontSize={'2.5rem'} justifyContent={'flex-end'} >
-        <Box _hover={{ textDecoration: "underline", color: "blue.500" }} mr={'2%'} >Home</Box>
-        <Box _hover={{ textDecoration: "underline", color: "blue.500" }} mr={'2%'} >Login</Box>
-        <Box _hover={{ textDecoration: "underline", color: "blue.500" }} mr={'2%'} >About us</Box>
-      </Flex>
-      <Flex ml={'5%'} fontSize={'6rem'} mt='13rem' >
+      <Flex className='head' justifyContent={{base:'center',md:'left',lg:'left'}} ml={'5%'} fontSize={{ base: '24px', md: '40px', lg: '56px' }} mt='13rem' >
       Empowering farmers
       <br></br>
        for a brighter future.
       </Flex>
-      <Flex mt={'1rem'} justifyContent={'left'} fontSize={'2rem'}  >
-        <Box width={'50vw'} >
+      <Flex mt={'1rem'} justifyContent={{base:'center',md:'left',lg:'left'}} fontSize={{ base: '1.7rem', md: '2rem', lg: '2rem' }}  >
+        <Box fontWeight={{base:'500',md:'100',lg:'100'}} color={{base:'green.800',md:'black',lg:'black'}} width={{base:'100vw',md:'50vw',lg:'50vw'}} >
       Get expert guidance on pest management by using our website for all your farming needs.
       Whether you're interested in urban farming, homesteading, or large-scale agriculture,  our website has everything you need to succeed and thrive.
       </Box>
       </Flex>
       </div>
       <div id='signup' >
-        <Flex width={'50vw'} ml={'10rem'} mt={'20rem'} fontSize={'5rem'} >
+        <Flex color='white' display={{base:'none',md:'flex',lg:'flex'}} width={'50vw'} ml={'10rem'} mt={'20rem'} fontSize={'5rem'} >
             Sign up to<br></br> Explore our <br></br> Website
             
         </Flex>
         {
           (login)?
-                <Box as={'Flex'} borderRadius={'2rem'} width={'25vw'} color={'black'} mr='10rem' backgroundColor={'whiteAlpha.700'} mt={'5rem'} mb='5rem' justifyContent={'center'} >
+                <Box   as={'Flex'} borderRadius={'2rem'}  color={'black'} ml={{base:'3rem',md:'0rem',lg:'0rem'}} mr='10rem' backgroundColor={'whiteAlpha.700'} mt={'5rem'} mb='5rem' justifyContent={'center'} >
                 <Flex justifyContent={'center'} >
                 <Login/>
 
                 </Flex>
-                <Flex justifyContent={'center'}  fontSize='1.3rem' >
+                <Flex mb={'3rem'} justifyContent={'center'}  fontSize='1.3rem' >
                       <Flex>Already a member?</Flex>
                       <Link to={'/'} >
                       <Flex onClick={()=>{setlogin(false)}}  >Log in</Flex>
@@ -51,7 +46,7 @@ function Landingpage() {
                       </Flex>  
                 </Box>:
 
-                  <Box as={'Flex'} borderRadius={'2rem'} width={'25vw'} color={'black'} mr='10rem' backgroundColor={'whiteAlpha.700'} mt={'5rem'} mb='5rem' justifyContent={'center'} >
+                  <Box  ml={{base:'3rem',md:'0rem',lg:'0rem'}} as={'Flex'} borderRadius={'2rem'}  color={'black'} mr='10rem' backgroundColor={'whiteAlpha.700'} mt={'5rem'} mb='5rem' justifyContent={'center'} >
                   <Flex justifyContent={'center'} >
                   <Signup/>
 

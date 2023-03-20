@@ -69,13 +69,9 @@ function Form() {
 
 {/* <Navbar/> */}
 
-<Box>
-      <Link to="/home" className="logo" id="websiteName">
-          <Image  h={'5rem'}  src={photo} alt='logo'  />
-      </Link>
-      </Box>
-<Flex color={'black'} fontSize={'15px'} width="full" align="center" justifyContent="center">
-      <Box fontSize={'15px'} p={2}>
+
+<Flex mt={'10rem'}  color={'black'} fontSize={'15px'} width="full" align="center" justifyContent="center">
+      <Box mb={'5rem'} boxShadow='dark-lg' p='6' rounded='md' bg='white' borderRadius={'2rem'} w={'35rem'}  fontSize={'15px'} >
         <Box  textAlign="center">
           <Heading mb={'10'} fontSize={'30px'} >Information Form</Heading>
         </Box>

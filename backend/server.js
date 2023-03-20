@@ -224,19 +224,24 @@ app.put("/image/:id",middleware, async (req, res) => {
   });
 
 
+  app.get('/data/:id',middleware, async(req,res)=>{
+    const id = req.params.id;
+    const data= await finalcrop.find({_id:id});
+    res.json({"data":data});
+  })
+
+
   app.post('/comment/:id',middleware, async (req,res)=>{
         const {comment}= req.body;
         const id=req.params.id;
         const isValidObjectId = ObjectId.isValid(id);
-        const token = authorization.split(' ')[1]
         try{
-            const {_id} = jwd.verify(token,KEY)
             if(isValidObjectId){
                 const data = await finalcrop.findByIdAndUpdate(id,{
                     $push:{
                       comment:{
-                        data:comment.data,
-                        user:_id,
+                        data:comment,
+                        user:id,
                         }
                     }
                 },{new:true});

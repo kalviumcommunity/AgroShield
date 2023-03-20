@@ -3,7 +3,7 @@
 
 import { Flex, Input,Box,Heading,FormControl,FormLabel,Button, Image } from '@chakra-ui/react'
 import Navbar from './Navbar'
-import image from '../assests/logo.png'
+import image from '../assests/finallogo.png'
 import React,{useEffect} from 'react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -122,11 +122,11 @@ function Signup () {
     <div >
 
 {/* <Navbar/> */}
-<Flex fontSize={'15px'} width="full" align="center" justifyContent="center">
+<Flex fontSize={'15px'} width={{base:'35rem',md:'full',lg:'full'}} align="center" justifyContent="center">
       <Box fontSize={'15px'} p={2}>
         <Box  textAlign="center">
         <Flex justifyContent={'center'} >
-        <Image  h={'10vh'} w='10vw' src={image} alt='logo'  />
+        <Image h={{md:'10vh',lg:'10vh'}} w={{base:'10rem',md:'10vw',lg:'10vw'}} src={image} alt='logo'  />
         </Flex>
           <Heading mb={'10'} fontSize={'30px'} >Welcome to Agroshield</Heading>
         </Box>
