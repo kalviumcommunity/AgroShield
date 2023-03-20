@@ -71,9 +71,11 @@ const navigate=useNavigate()
 
 
 useEffect(() => {
+  if(props.data.length>0){
   setsearch(props.data.filter((e) => {
            return (props.type)?props.type===e.type:e; 
  }));
+}
 }, [props.type]);
 
     
