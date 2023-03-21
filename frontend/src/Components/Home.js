@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react'
 
 import { SimpleGrid,Heading, Flex, Box, Button } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState,useRef} from 'react';
 import Startpage from './Startpage';
 import { Card,Image,Divider, Stack, CardBody, CardFooter } from '@chakra-ui/react'
-import image from '../assests/blacklogo.jpg'
-import { Link,useNavigate } from 'react-router-dom';
+import image from '../assests/process.jpg'
+import { useLocation,useNavigate } from 'react-router-dom';
 
 function Home(props) {
 
-
+  const pagechecker = useLocation().pathname === '/home/:id'
+  const homechecker = useLocation().pathname === '/home'
 
  
 const navigate=useNavigate()
@@ -19,6 +20,18 @@ const navigate=useNavigate()
         Input=value.toLowerCase();
       }
 
+      const element=useRef(null);
+
+      const [currid,setid] = useState(null);
+
+      
+      const handleelement=()=>{
+        if(props.element){
+          const card=document.getElementById(`${props.id}`);
+          card.scrollIntoView();
+        }
+       
+      }
 
 
   const [render, setrender] = useState(false);
@@ -62,7 +75,12 @@ const navigate=useNavigate()
 
 
 
-  
+
+  setTimeout(() => {
+    handleelement()
+  }, 1000);
+    
+ 
 
 
 
@@ -71,39 +89,59 @@ const navigate=useNavigate()
 
 
 useEffect(() => {
-  if(props.data.length>0){
+  if(props.data){
   setsearch(props.data.filter((e) => {
            return (props.type)?props.type===e.type:e; 
  }));
 }
-}, [props.type]);
+
+}, [props.type,props.data]);
+
+
+  if(pagechecker){
+    return <></>
+  }
+
+    else if(homechecker){
 
     
           
-      if(render){
-        return <Startpage/>
-      }
-      else{
+
         return (
           (search.length>0)?
+          
           <>
-
           <SimpleGrid mt={'10rem'} p="15px" spacing={10} minChildWidth="350px" >
           {
             search.map((dat, index)=>{
               return (
-                // <Link to={`/data/${dat._id}`} >
-                <Card onClick={()=>{
+               
+                <Card ref={element} id={`${dat._id}`} onClick={()=>{
+                  setid(dat._id)
                   navigate(`/home/${dat._id}`)
+                  
+                  
                 }}  boxShadow='2xl' p='6' rounded='md' bg='white' key={index} maxW='350px'>
                     <CardBody>
-                      <Image
+                      {
+                        (dat.image)?
+                        <Image
                       h={'200px'}
                       w='full'
                         src={dat.image}
                         alt='Green double couch with wooden legs'
                         borderRadius='lg'
+                      />:
+                      <Image
+                      h={'200px'}
+                      w='full'
+                        src={image}
+                        alt='Green double couch with wooden legs'
+                        borderRadius='lg'
                       />
+
+                      }
+                      
                       <Stack  mt='6' spacing='3'  >
       <Flex justifyContent={'space-between'} >
       <Box>
@@ -134,7 +172,7 @@ useEffect(() => {
 
 
 </Card>
-// </Link>
+
               
               )
             })
@@ -145,13 +183,14 @@ useEffect(() => {
   
          </SimpleGrid>
          </>
+         
               :
-      <Flex fontSize={'3rem'} justifyContent={'center'} m='25rem' >
-      Sorry can't find data
+      <Flex m={'20rem'} fontSize={'3rem'} justifyContent={'center'} >
+        Sorry can't find data
       </Flex>
         )
-      }
-
+      
+        }
      
 
 }

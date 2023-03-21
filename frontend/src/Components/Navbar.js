@@ -19,6 +19,7 @@ function Navbar() {
 
 
   const handlesearch=()=>{
+
     if(search){
       setsearch(false);
     }
@@ -40,24 +41,46 @@ function Navbar() {
 
   
 
-  useEffect(()=>{
-    fetch(API, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + Token,
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-      .then(res=>res.json())
-      .then((data)=>{
-        setSuggestions(data);
-        setTemporary(data);
-        setIsLoading(false);
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-  },[query])
+  // useEffect(()=>{
+  //   fetch(API, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Authorization': 'Bearer ' + Token,
+  //       "Content-type": "application/json; charset=UTF-8"
+  //     }
+  //   })
+  //     .then(res=>res.json())
+  //     .then((data)=>{
+  //       setSuggestions(data);
+  //       setTemporary(data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((err)=>{
+  //       console.log(err);
+  //     })
+  // },[query])
+
+
+  // useEffect(()=>{
+  //   fetch(API, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Authorization': 'Bearer ' + Token,
+  //       "Content-type": "application/json; charset=UTF-8"
+  //     }
+  //   })
+  //     .then(res=>res.json())
+  //     .then((data)=>{
+  //       setSuggestions(data);
+  //       setTemporary(data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((err)=>{
+  //       console.log(err);
+  //     })
+  // },[homeChecker])
+
+
 
 
   useEffect(()=>{
@@ -70,34 +93,15 @@ function Navbar() {
     })
       .then(res=>res.json())
       .then((data)=>{
-        setSuggestions(data);
-        setTemporary(data);
-        setIsLoading(false);
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-  },[homeChecker])
-
-
-
-
-  useEffect(()=>{
-    fetch(API, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + Token,
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-      .then(res=>res.json())
-      .then((data)=>{
+        
         sethomepagedata(data);
       })
       .catch((err)=>{
         console.log(err);
       })
   },[search])
+
+ 
 
   const handlefilter=()=>{
 
@@ -139,7 +143,7 @@ function Navbar() {
       <Flex  alignContent={'center'} justifyContent='space-around' >
         
         <Box>   
-          <Flex w={'30rem'} >  
+          <Flex w={{base:'22rem',md:'30rem',lg:'30rem'}} >  
            <Input
            boxShadow='dark-lg' p='6' rounded='md' bg='white'
            type={'text'}
@@ -148,7 +152,7 @@ function Navbar() {
            value={query}
            mt={'0.5rem'}
            h={'4rem'} w={'30rem'} borderRadius='2rem 0rem 0rem 2rem' />
-           <Button fontSize={'1.4rem'} boxShadow='dark-lg' p='6' rounded='md' bg='white' w={'7rem'} mt={'0.5rem'} h={'4rem'} onClick={()=>{handlesearch()}} borderRadius='0rem 2rem 2rem 0rem' >Search</Button>
+           <Button fontSize={'1.4rem'} boxShadow='dark-lg' p='6' rounded='md' bg='white' w={{base:'8rem',md:'7rem',lg:'7rem'}} mt={'0.5rem'} h={'4rem'} onClick={()=>{handlesearch()}} borderRadius='0rem 2rem 2rem 0rem' >Search</Button>
            </Flex>
            </Box>
       </Flex>
@@ -159,11 +163,12 @@ function Navbar() {
       </Flex>
 
       {
-        (homepagedata.length>0 || Formpagechecker )?(
+        (homepagedata.length>0 || Formpagechecker )?
           <></>
-        ):(
+        :
           <ImageCarousel/>
-        )
+          
+        
       }
 
       
@@ -206,10 +211,9 @@ function Navbar() {
       </Button>
 
 
-        
-
-       
-        <Flex id="filter" _hover={{cursor:'pointer'}} mt={'10rem'} ml={'2rem'} justifyContent={'left'} >
+        {
+          (homepagedata.length>0)?
+          <Flex id="filter" _hover={{cursor:'pointer'}} mt={'10rem'} ml={'2rem'} justifyContent={'left'} >
           <Box mr={'1rem'} onClick={()=>setmedicineType("")} >
             All
           </Box>
@@ -228,7 +232,11 @@ function Navbar() {
           <Box onClick={()=>setmedicineType("Biofungicide")}  >
             Bio-fung
           </Box>
-        </Flex>
+        </Flex>:<></>
+        }
+
+       
+        
 
 
 
@@ -246,7 +254,7 @@ function Navbar() {
 
 
 
-      {homeChecker && (
+      {homeChecker && homepagedata.length>0 && (
         <Home data={homepagedata} triger={search} name={query} type={medicineType} />
       )}
 

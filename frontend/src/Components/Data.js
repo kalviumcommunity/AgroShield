@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {AiOutlineComment} from 'react-icons/ai'
 import {BsImage} from 'react-icons/bs'
-import image from '../assests/blacklogo.jpg'
+import image from '../assests/process.jpg'
+import Home from './Home';
 
 function Data() {
    
@@ -14,7 +15,7 @@ function Data() {
     const Token = sessionStorage.getItem("token");
 
 
-    const API1=process.env.REACT_APP_SECRET_KEY+`/data${id}`
+    const API1=process.env.REACT_APP_SECRET_KEY+`/data/${id}`
 
     useEffect(()=>{
         fetch(API1,{
@@ -55,7 +56,7 @@ function Data() {
 
     const handlecommentinput=()=>{
         if(comment!==' '){
-            fetch(`http://localhost:2000/comment/${id}`,{
+            fetch(COMMENT,{
                 method:'POST',
                 body: JSON.stringify({
                     "comment":comment
@@ -80,8 +81,8 @@ function Data() {
 
 
     return (
-        <div>
-            <Box display="flex" justifyContent="center" alignItems="center">
+        <div style={{minHeight:'100vh'}}>
+            <Box mt={'4rem'} display="flex" justifyContent="center" alignItems="center">
     
             {
             data.map((dat)=>{
@@ -94,6 +95,7 @@ function Data() {
       variant='outline'
       h={{base:'full',sm:'full',lg:'80vh'}}
       w={{base:'80vw',sm:'95vw',lg:'85vw'}}
+    
       mb={'20rem'}
     >
     
@@ -185,7 +187,7 @@ function Data() {
     }
              </Box>
     
-    
+        <Home id={id} />
         </div>
       )
 }
