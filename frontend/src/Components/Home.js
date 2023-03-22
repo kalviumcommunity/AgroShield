@@ -24,14 +24,17 @@ const navigate=useNavigate()
 
       const [currid,setid] = useState(null);
 
+      const id = localStorage.getItem("id");
       
       const handleelement=()=>{
-        if(props.element){
-          const card=document.getElementById(`${props.id}`);
+        if(id){
+          const card=document.getElementById(`${id}`);
           card.scrollIntoView();
         }
        
       }
+
+      
 
 
   const [render, setrender] = useState(false);

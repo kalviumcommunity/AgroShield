@@ -54,6 +54,8 @@ function Data() {
 
     const COMMENT=process.env.REACT_APP_SECRET_KEY+ `/comment/${id}`
 
+    localStorage.setItem("id",id)
+
     const handlecommentinput=()=>{
         if(comment!==' '){
             fetch(COMMENT,{
@@ -187,7 +189,7 @@ function Data() {
     }
              </Box>
     
-        <Home id={id} />
+       
         </div>
       )
 }
