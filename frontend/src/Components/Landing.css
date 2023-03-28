@@ -16,8 +16,26 @@
     width: 100vw;
     display: flex;
 }
+
+@media screen and (max-width:600px) {
+    #signup{
+        background-color: #fefefe;
+
+    }
+    #image{
+        height: 40vh;
+        background-size: 100vw 40vh;
+        background-color: white;   
+    }
+
+}
+
+
 #aboutus{
     background-color: white;
     height: 100vh;
     width: 100vw;
 }
+
+
+
