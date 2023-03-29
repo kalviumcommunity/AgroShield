@@ -1,8 +1,8 @@
 import { Box, Flex } from '@chakra-ui/react'
 import React,{useState} from 'react'
 import { Link } from 'react-router-dom';
-import Login from './Login';
 import Signup from './Signup';
+import Login from './Login';
 
 function Register() {
 
@@ -18,7 +18,7 @@ function Register() {
       (login)?
             <Box   as={'Flex'} borderRadius={'2rem'}  color={'black'} ml={{base:'3rem',md:'0rem',lg:'0rem'}} mr='10rem' backgroundColor={'whiteAlpha.700'} mt={'5rem'} mb='5rem' justifyContent={'center'} >
             <Flex justifyContent={'center'} >
-            <Login/>
+            <Signup/>
 
             </Flex>
             <Flex mb={'3rem'} justifyContent={'center'}  fontSize='1.3rem' >
@@ -31,7 +31,7 @@ function Register() {
 
               <Box  ml={{base:'3rem',md:'0rem',lg:'0rem'}} as={'Flex'} borderRadius={'2rem'}  color={'black'} mr='10rem' backgroundColor={'whiteAlpha.700'} mt={'5rem'} mb='5rem' justifyContent={'center'} >
               <Flex justifyContent={'center'} >
-              <Signup/>
+              <Login/>
 
               </Flex>
               <Flex justifyContent={'center'} mb='3rem'  fontSize='1.3rem' >

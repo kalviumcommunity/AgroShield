@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FaGoogle } from 'react-icons/fa'
 import jwt_decode from 'jwt-decode'
 
-function Signup () {
+function Login () {
 
   const [email, setemail] = useState('');
   const [password,setpassword] = useState('');
@@ -185,4 +185,4 @@ function Signup () {
   )
 }
 
-export default Signup;
+export default Login;

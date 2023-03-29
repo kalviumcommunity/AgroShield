@@ -9,7 +9,7 @@ import { useNavigate} from "react-router-dom"
 import { FaGoogle } from 'react-icons/fa'
 import jwt_decode from 'jwt-decode'
 
-function Login () {
+function Signup () {
 
   const SIGNUP=process.env.REACT_APP_SECRET_KEY + '/signup'
   const ID=process.env.REACT_APP_KEY
@@ -193,4 +193,4 @@ function Login () {
   )
 }
 
-export default Login
+export default Signup
