@@ -1,13 +1,6 @@
-
-
-
-import { Flex, Input,Box,Heading,FormControl,FormLabel,Button, Image, DarkMode, LightMode } from '@chakra-ui/react'
-import Navbar from './Navbar'
-import Footer from './Footer'
+import { Flex, Input,Box,Heading,FormControl,FormLabel,Button,  LightMode } from '@chakra-ui/react'
 import React from 'react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import photo from '../assests/logo.png'
 
 function Form() {
 
@@ -15,20 +8,15 @@ function Form() {
   const [medicine,setmedicine] = useState('');
   const [type,settype] = useState('');
   const [diseasename,setdisease] = useState('');
-  const [username,setname] = useState('');
   const [image,setimage] = useState('');
 
    const USERINPUT = process.env.REACT_APP_SECRET_KEY + '/userinput'
     const Token = sessionStorage.getItem("token")
+    const name=sessionStorage.getItem('username')
 
-  const checkfield=(e)=>{
-    e.preventDefault();
-    if(Crop!="" && medicine!="" && type!="" && username!="" &&  image!="" && diseasename!=""){
-    // console.log("cropname",Crop);
-    // console.log("Medicine Name",medicine);
-    // console.log("Type",type);
-    // console.log("dosease",diseasename);
-    // console.log("Username",username);
+  const checkfield=()=>{
+    
+    if(Crop!=="" && medicine!=="" && type!=="" && name!=="" &&  image!=="" && diseasename!==""){
     fetch(USERINPUT, {
      
     // Adding method type
@@ -39,7 +27,7 @@ function Form() {
       "cropName":Crop,
       "diseaseName":diseasename,
       "solution":medicine,
-      "UserName":username,
+      "UserName":name,
       "type":type,
       "image":image,
   }),
@@ -55,11 +43,16 @@ function Form() {
 .then(response => response.json())
  
 // Displaying results to console
-.then(json => console.log(json));
-    window.location.href="/";
+.then(json =>{ 
+  console.log(json)
+  window.location.href="/home"
+});
+    
     }
     
   }
+
+
 
   
 
@@ -67,7 +60,7 @@ function Form() {
   return (
     <div >
 
-{/* <Navbar/> */}
+
 
 
 <Flex mt={'10rem'}  color={'black'} fontSize={'15px'} width="full" align="center" justifyContent="center">
@@ -121,10 +114,7 @@ function Form() {
             </FormControl>
 
 
-            <FormControl mb={'10'} >
-              <FormLabel fontSize={'20px'} >Your Name</FormLabel>
-              <Input onChange={(e)=>setname(e.target.value)} h={'16'} type={'text'} size={'lg'}  placeholder="Type your name..." />
-            </FormControl>
+         
 
 
             <Button h={'16'} fontSize={'20px'} width="full" mt={4} type="submit" onClick={()=>checkfield()} >

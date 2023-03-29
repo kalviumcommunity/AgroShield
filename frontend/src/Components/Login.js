@@ -2,18 +2,25 @@
 
 
 import { Flex, Input,Box,Heading,FormControl,FormLabel,Button, Image } from '@chakra-ui/react'
+import Navbar from './Navbar'
 import image from '../assests/finallogo.png'
 import React,{useEffect} from 'react'
 import { useState } from 'react'
-import { useNavigate} from "react-router-dom"
+import { Link, useNavigate } from 'react-router-dom'
 import { FaGoogle } from 'react-icons/fa'
 import jwt_decode from 'jwt-decode'
 
-function Login () {
+function Signup () {
 
+  const [email, setemail] = useState('');
+  const [password,setpassword] = useState('');
+  const navigate=useNavigate();
   const LOGIN=process.env.REACT_APP_SECRET_KEY + '/login'
   const ID=process.env.REACT_APP_KEY
-  const TOKEN = process.env.REACT_APP_SECRET_KEY + '/token'
+  const TOKEN=process.env.REACT_APP_SECRET_KEY + '/token'
+
+
+
 
   function handlecallbackresponse(response){
     
@@ -55,25 +62,20 @@ function Login () {
     })
 
     google.accounts.id.renderButton(
-      document.getElementById("signindiv"),
+      document.getElementById("signupdiv"),
       {size:"medium"}
     );
 
 
   },[])
 
-  const [username,setusername] = useState('');
-  const [email, setemail] = useState('');
-  const [password,setpassword] = useState('');
 
 
-
-  const navigate = useNavigate();
 
 
   const checkfield=(e)=>{
     e.preventDefault();
-    if(username!=="" && email!=="" && password!=="" ){
+    if( email!=="" && password!=="" ){
     fetch(LOGIN, {
      
     // Adding method type
@@ -81,7 +83,6 @@ function Login () {
      
     // Adding body or contents to send
     body: JSON.stringify({
-      "name":username,
       "email":email,
       "password":password,
   }),
@@ -96,16 +97,19 @@ function Login () {
 .then(response => response.json())
  
 // Displaying results to console
-.then(json => {
-    
-    const decode = jwt_decode(json.user)
-    sessionStorage.setItem("username",decode.name);
-    sessionStorage.setItem("token",json.user)
-    navigate("/home")
-    
-}
-   
-);
+.then(json =>{
+  console.log(json.user)
+    if(json.user){
+        alert("login successfully")
+        const decode = jwt_decode(json.user)
+        sessionStorage.setItem("username",decode.name);
+        sessionStorage.setItem("token",json.user);
+        navigate("/home")
+    }
+    else{
+        alert("Please check your email and password")
+    }
+});
     
     }
     
@@ -118,40 +122,30 @@ function Login () {
     <div >
 
 {/* <Navbar/> */}
-
-<Flex  fontSize={'15px'} width={{base:'35rem',md:'full',lg:'full'}} align="center" justifyContent="center">
+<Flex fontSize={'15px'} width={{base:'35rem',md:'full',lg:'full'}} align="center" justifyContent="center">
       <Box fontSize={'15px'} p={2}>
         <Box  textAlign="center">
-          <Flex justifyContent={'center'} >
-        <Image  h={{md:'10vh',lg:'10vh'}} w={{base:'10rem',md:'10vw',lg:'10vw'}} src={image} alt='logo'  />
+        <Flex justifyContent={'center'} >
+        <Image h={{md:'10vh',lg:'10vh'}} w={{base:'10rem',md:'10vw',lg:'10vw'}} src={image} alt='logo'  />
         </Flex>
-          <Heading mb={'5rem'} fontSize={'30px'} >Welcome to Agroshield</Heading>
+          <Heading mb={'10'} fontSize={'30px'} >Welcome to Agroshield</Heading>
         </Box>
         <Box  my={4} textAlign="left">
-          <form  onSubmit={(e)=>checkfield(e)} >
+          <form onSubmit={(e)=>checkfield(e)} >
             
 
 
             
 
 
-            <FormControl mb={'10'} >
-              <FormLabel fontSize={'20px'} > Name</FormLabel>
-              <Input 
-              sx={{
-                "::placeholder": {
-                  color: "black"
-                }
-              }}
-              onChange={(e)=>setusername(e.target.value)} h={'16'} type={'text'} size={'lg'}  placeholder="Enter name..." value={username} />
-            </FormControl>
+        
 
            
 
 
             <FormControl mb={'10'} >
               <FormLabel fontSize={'20px'} >Email</FormLabel>
-              <Input 
+              <Input
               sx={{
                 "::placeholder": {
                   color: "black"
@@ -161,25 +155,23 @@ function Login () {
             </FormControl>
 
 
-            <FormControl  mb={'5'} >
+            <FormControl mb={'10'} >
               <FormLabel fontSize={'20px'} >Password</FormLabel>
               <Input 
-                sx={{
+              sx={{
                 "::placeholder": {
                   color: "black"
                 }
-              }} 
+              }}
               onChange={(e)=>setpassword(e.target.value)} h={'16'} size={'lg'} type={'password'}  placeholder="Enter password..." value={password} />
             </FormControl>
 
 
-
-
-            <Button borderRadius={'2rem'} h={'16'} fontSize={'1.5rem'} width="full" mt={4} type="submit" onClick={(e)=>checkfield(e)} >
+            <Button borderRadius={'2rem'} h={'16'} fontSize={'1.5rem'} width="full" mt={4} type="submit" onClick={()=>checkfield()} >
               Continue
             </Button>
-            <Flex justifyContent={'center'}  fontSize='1.5rem' > OR</Flex>
-            <Button id='signindiv' leftIcon={<FaGoogle/>} borderRadius={'2rem'} h={'16'} fontSize={'1.5rem'} width="full" mt={4} type="submit" >
+            <Flex justifyContent={'center'} fontSize='1.5rem' >OR</Flex>
+            <Button id='signupdiv' leftIcon={<FaGoogle/>} borderRadius={'2rem'} h={'16'} fontSize={'1.5rem'} width="full" mt={4} type="submit" >
               Continue with Google
             </Button>
           </form>
@@ -193,4 +185,4 @@ function Login () {
   )
 }
 
-export default Login
+export default Signup;
