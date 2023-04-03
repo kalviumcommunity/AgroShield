@@ -1,10 +1,9 @@
-import { Box, Button, Card, CardBody, CardFooter, Divider, Flex, Heading, Image, Input, SimpleGrid, Spacer, Stack } from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, CardFooter, Flex, Heading, Image, Input,Stack } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {AiOutlineComment} from 'react-icons/ai'
 import {BsImage} from 'react-icons/bs'
 import image from '../assests/process.jpg'
-import Home from './Home';
 
 function Data() {
    

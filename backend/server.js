@@ -114,7 +114,7 @@ app.post("/token", async (req, res) => {
 
 
 
-app.post("/login",async (req,res)=>{
+app.post("/signup",async (req,res)=>{
     const {name,email,password} = req.body;
     const newpassword= await bcrypt.hash(password,10);
 
@@ -143,7 +143,7 @@ app.post("/login",async (req,res)=>{
 
 
 
-app.post("/signup", async (req,res)=>{
+app.post("/login", async (req,res)=>{
     const {email,password} = req.body;
 
     const check = await ChannelModel.findOne({email:email});

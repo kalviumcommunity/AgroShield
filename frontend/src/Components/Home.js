@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react'
-
-import { SimpleGrid,Heading, Flex, Box, Button } from '@chakra-ui/react';
+import { SimpleGrid,Heading, Flex, Box } from '@chakra-ui/react';
 import { useState,useRef} from 'react';
-import Startpage from './Startpage';
 import { Card,Image,Divider, Stack, CardBody, CardFooter } from '@chakra-ui/react'
 import image from '../assests/process.jpg'
 import { useLocation,useNavigate } from 'react-router-dom';
@@ -22,8 +20,6 @@ const navigate=useNavigate()
 
       const element=useRef(null);
 
-      const [currid,setid] = useState(null);
-
       const id = localStorage.getItem("id");
       
       const handleelement=()=>{
@@ -37,45 +33,7 @@ const navigate=useNavigate()
       
 
 
-  const [render, setrender] = useState(false);
   const [search,setsearch] = useState([]);
-  const [temporary,setTemporary] = useState([]);
-  const [apidata, setdata] = useState([])
-
-  const API=process.env.REACT_APP_SECRET_KEY + `/userinput?cropName=${Input}`
-  
-  const Token = sessionStorage.getItem("token")
-
-
-
-
-
-  // useEffect(() => {
-  //   fetch(API, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Authorization': 'Bearer ' + Token,
-  //       "Content-type": "application/json; charset=UTF-8"
-  //     }
-  //   })
-  //     .then(res => {
-  //       if (!res.ok) {
-  //         throw new Error(res.status);
-  //       }
-  //       return res.json();
-  //     })
-  //     .then(data => {       
-  //       setdata(data);
-  //       setTemporary(data);
-  //       setrender(false);
-
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       // handle error here
-  //     })
-  // }, [props.triger]);
-
 
 
 
@@ -120,7 +78,6 @@ useEffect(() => {
               return (
                
                 <Card ref={element} id={`${dat._id}`} onClick={()=>{
-                  setid(dat._id)
                   navigate(`/home/${dat._id}`)
                   
                   
