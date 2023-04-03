@@ -39,46 +39,40 @@ function Navbar() {
 
   const Token=sessionStorage.getItem("token")
 
-  
-
-  // useEffect(()=>{
-  //   fetch(API, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Authorization': 'Bearer ' + Token,
-  //       "Content-type": "application/json; charset=UTF-8"
-  //     }
-  //   })
-  //     .then(res=>res.json())
-  //     .then((data)=>{
-  //       setSuggestions(data);
-  //       setTemporary(data);
-  //       setIsLoading(false);
-  //     })
-  //     .catch((err)=>{
-  //       console.log(err);
-  //     })
-  // },[query])
+  function removeduplicate(array){
+    const result=[];
+    for(let i=0; i<array.length-1; i++){
+      if(array[i].cropName!==array[i+1].cropName) result.push(array[i]);
+    }
+    return setSuggestions(result);
+  }
 
 
-  // useEffect(()=>{
-  //   fetch(API, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Authorization': 'Bearer ' + Token,
-  //       "Content-type": "application/json; charset=UTF-8"
-  //     }
-  //   })
-  //     .then(res=>res.json())
-  //     .then((data)=>{
-  //       setSuggestions(data);
-  //       setTemporary(data);
-  //       setIsLoading(false);
-  //     })
-  //     .catch((err)=>{
-  //       console.log(err);
-  //     })
-  // },[homeChecker])
+  useEffect(()=>{
+    fetch(API, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + Token,
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+      .then(res=>res.json())
+      .then((data)=>{
+        // setSuggestions(data);
+        // setTemporary(data);
+        removeduplicate(data);
+        setIsLoading(false);
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+  },[query])
+
+
+
+
+
+ 
 
 
 
