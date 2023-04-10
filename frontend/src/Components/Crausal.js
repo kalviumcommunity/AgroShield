@@ -49,7 +49,7 @@ function ImageCarousel() {
           <Image  src={"https://uploads-ssl.webflow.com/5f15898ab066ca861e269e4a/61122a185e25c3107bd3dc46_shutterstock_34776166.jpg"} alt="slide_image" />
         </SwiperSlide>
         <SwiperSlide>
-          <Image src={"https://imgix-prod.sgs.com/-/media/sgscorp/images/cotton-plant.cdn.en.1.jpg?fit=crop&crop=edges&auto=format&w=1200&h=630"} alt="slide_image" />
+          <Image src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf93t8-19mS3fT-DqUoeaqNIwd98jItdGUGw&usqp=CAU"} alt="slide_image" />
         </SwiperSlide>
         <SwiperSlide>
           <Image src={'https://media.istockphoto.com/id/1154958041/photo/taking-care-of-the-crop-aerial-view-of-a-tractor-fertilizing-a-cultivated-agricultural-field.jpg?b=1&s=612x612&w=0&k=20&c=wczspMJRLem3dvVmF0xnTdi6SmkNyWaT97PxjAF0sO4='} alt="slide_image" />

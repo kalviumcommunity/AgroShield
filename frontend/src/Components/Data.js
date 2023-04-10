@@ -1,9 +1,10 @@
-import { Box, Button, Card, CardBody, CardFooter, Flex, Heading, Image, Input,Stack } from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, CardFooter, Flex, Heading, Image, Input,Stack, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {AiOutlineComment} from 'react-icons/ai'
 import {BsImage} from 'react-icons/bs'
 import image from '../assests/process.jpg'
+import { FaPlus } from 'react-icons/fa';
 
 function Data() {
    
@@ -86,6 +87,7 @@ function Data() {
             <Box mt={'4rem'} display="flex" justifyContent="center" alignItems="center">
     
             {
+                (data.length>0)?
             data.map((dat)=>{
                 return(
     
@@ -183,9 +185,23 @@ function Data() {
     
     )
     })
-    
+    :
+    <Box textAlign="center" mt="20">
+        <Heading as="h1" size="4xl" mb="4">
+          404
+        </Heading>
+        <Text fontSize="2xl" fontWeight="bold">
+          Oops! The page you are looking for does not exist.
+        </Text>
+      </Box>
     
     }
+    <Link to={'/form'} >
+      <Button
+      _hover={{ backgroundColor: "black",color:'white' }}
+      borderRadius={'5rem'} h={'6rem'} w={'6rem'} bottom={'5rem'} zIndex={9999} right='4rem' position={'fixed'} leftIcon={<FaPlus/>} >
+      </Button>
+      </Link>
              </Box>
     
        
