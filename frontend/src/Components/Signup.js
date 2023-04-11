@@ -179,7 +179,7 @@ function Signup () {
               Continue
             </Button>
             <Flex justifyContent={'center'}  fontSize='1.5rem' > OR</Flex>
-            <Button id='signindiv' leftIcon={<FaGoogle/>} borderRadius={'2rem'} h={'16'} fontSize={'1.5rem'} width="full" mt={4} type="submit" >
+            <Button bg={'white'} id='signindiv' leftIcon={<FaGoogle/>} borderRadius={'2rem'} h={'16'} fontSize={'1.5rem'} width="full" mt={4} type="submit" >
               Continue with Google
             </Button>
           </form>

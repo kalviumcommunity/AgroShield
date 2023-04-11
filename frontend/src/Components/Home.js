@@ -1,22 +1,70 @@
 import React, { useEffect } from 'react'
-import { SimpleGrid,Heading, Flex, Box } from '@chakra-ui/react';
+import { SimpleGrid,Heading, Flex, Box, Button } from '@chakra-ui/react';
 import { useState,useRef} from 'react';
 import { Card,Image,Divider, Stack, CardBody, CardFooter } from '@chakra-ui/react'
 import image from '../assests/process.jpg'
-import { useLocation,useNavigate } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import NodeContext from '../Context/noteContext';
+import Crausal from './Crausal';
+import { FaPlus } from 'react-icons/fa';
 
 function Home(props) {
 
   const pagechecker = useLocation().pathname === '/home/:id'
   const homechecker = useLocation().pathname === '/home'
+  const cropname=useContext(NodeContext);
 
+  const [search,setsearch] = useState([]);
+  const [medicine,setmedicineType]=useState("");
+  const [dummy,setdummy] = useState([]);
+
+  const navigate=useNavigate()
+      
+  const API=process.env.REACT_APP_SECRET_KEY + `/userinput?cropName=${cropname.query}`
+
+
+  const Token=sessionStorage.getItem("token")
+  
+  // if(cropname.query && cropname.search){
+      
+  //   fetch(API, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Authorization': 'Bearer ' + Token,
+  //       "Content-type": "application/json; charset=UTF-8"
+  //     }
+  //   })
+  //     .then(res=>res.json())
+  //     .then((data)=>{
+        
+  //       setsearch(data);
+        
+  //     })
+  //     .catch((err)=>{
+  //       console.log(err);
+  //     })
  
-const navigate=useNavigate()
-        const value=props.name;
-      var Input=" ";
-      if(value){
-        Input=value.toLowerCase();
+  // }
+
+  useEffect(()=>{
+    fetch(API, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + Token,
+        "Content-type": "application/json; charset=UTF-8"
       }
+    })
+      .then(res=>res.json())
+      .then((data)=>{
+        
+        setdummy(data);
+        
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
+  },[cropname.search])
 
       const element=useRef(null);
 
@@ -33,13 +81,15 @@ const navigate=useNavigate()
       
 
 
-  const [search,setsearch] = useState([]);
-
+  
 
 
   setTimeout(() => {
     handleelement()
   }, 1000);
+
+
+
     
  
 
@@ -50,35 +100,67 @@ const navigate=useNavigate()
 
 
 useEffect(() => {
-  if(props.data){
-  setsearch(props.data.filter((e) => {
-           return (props.type)?props.type===e.type:e; 
+  if(dummy.length>0){
+  setsearch(dummy.filter((e) => {
+           return (medicine)?medicine===e.type:e; 
  }));
 }
 
-}, [props.type,props.data]);
+}, [dummy,medicine]);
 
+const handlefilter=()=>{
 
-  if(pagechecker){
-    return <></>
+  if(document.getElementById('filter').style.display==='none'){
+    document.getElementById('filter').style.display='flex'
   }
+  else{
+    document.getElementById('filter').style.display='none'
+  }
+}
 
-    else if(homechecker){
+
+
+
+   
 
     
           
 
         return (
-          (search.length>0)?
+          (cropname.query )?
           
           <>
-          <SimpleGrid mt={'10rem'} p="15px" spacing={10} minChildWidth="350px" >
+
+          <Flex id="filter" _hover={{cursor:'pointer'}} mt={'10rem'} ml={'2rem'} justifyContent={'left'} >
+          <Box mr={'1rem'} onClick={()=>setmedicineType("")} >
+            All
+          </Box>
+          <Box mr={'1rem'} onClick={()=>setmedicineType("Herbicide")} >
+            Herb
+          </Box>
+          <Box mr={'1rem'} onClick={()=>setmedicineType("Insecticide")} >
+            Insect
+          </Box>
+          <Box mr={'1rem'} onClick={()=>setmedicineType("Fungicide")}  >
+            Fung
+          </Box>
+          <Box mr={'1rem'} onClick={()=>setmedicineType("Bioinsecticide")} >
+            Bio-insect
+          </Box>
+          <Box onClick={()=>setmedicineType("Biofungicide")}  >
+            Bio-fung
+          </Box>
+        </Flex>
+
+
+          {(search.length>0)?
+          <SimpleGrid mt={'10rem'} p="15px" spacing={10} minChildWidth="350px" minHeight={'80vh'} >
           {
             search.map((dat, index)=>{
               return (
                
                 <Card ref={element} id={`${dat._id}`} onClick={()=>{
-                  navigate(`/home/${dat._id}`)
+                  navigate(`./${dat._id}`)
                   
                   
                 }}  boxShadow='2xl' p='6' rounded='md' bg='white' key={index} maxW='350px'>
@@ -141,16 +223,34 @@ useEffect(() => {
           
   
   
-         </SimpleGrid>
+         </SimpleGrid>:
+         <Flex justifyContent={'center'} m={'20rem'} fontSize={'3rem'} >Sorry! No data found</Flex>
+         
+         }
+         <Link to={'/form'} >
+      <Button
+      _hover={{ backgroundColor: "black",color:'white' }}
+      borderRadius={'5rem'} h={'6rem'} w={'6rem'} bottom={'5rem'} zIndex={9999} right='4rem' position={'fixed'} leftIcon={<FaPlus/>} >
+      </Button>
+      </Link>
+
+        
+      <Button
+      onClick={()=>handlefilter()}
+      _hover={{ backgroundColor: "black",color:'white' }}
+      borderRadius={'5rem'}  h={'5rem'} w={'5rem'} top={'8rem'}  left='2rem' position={'fixed'}  >
+        Filter
+      </Button>
+
+      
+
+
          </>
          
               :
-      <Flex m={'20rem'} fontSize={'3rem'} justifyContent={'center'} >
-        Sorry can't find data
-      </Flex>
+      <Crausal/>
         )
       
-        }
      
 
 }
