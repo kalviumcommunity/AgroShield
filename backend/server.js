@@ -44,10 +44,10 @@ app.post("/userinput",(req,res)=>{
     }
     else{
     const {cropName, diseaseName, solution,UserName,type,image} = req.body;
-
+      // implement schema model
     const model = new finalcrop()
     model.cropName = cropName
-    model.diseaseName = diseaseName
+    model.Disease = diseaseName
     model.solution = solution
     model.UserName = UserName
     model.type = type

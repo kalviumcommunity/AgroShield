@@ -6,7 +6,7 @@ const channelModel =  new mongoose.Schema({
         required:true,
         trim: true
     },
-    diseaseName:{
+    Disease:{
         type:String,
         required: true,
         trim:true,
