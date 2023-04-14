@@ -1,6 +1,7 @@
 import { Flex, Input,Box,Heading,FormControl,FormLabel,Button,  LightMode } from '@chakra-ui/react'
 import React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 function Form() {
 
@@ -10,12 +11,14 @@ function Form() {
   const [diseasename,setdisease] = useState('');
   const [image,setimage] = useState('');
 
+  const navigate = useNavigate();
+
    const USERINPUT = process.env.REACT_APP_SECRET_KEY + '/userinput'
     const Token = sessionStorage.getItem("token")
     const name=sessionStorage.getItem('username')
 
-  const checkfield=()=>{
-    
+  const checkfield=(e)=>{
+    e.preventDefault()
     if(Crop!=="" && medicine!=="" && type!=="" && name!=="" &&  image!=="" && diseasename!==""){
     fetch(USERINPUT, {
      
@@ -25,7 +28,7 @@ function Form() {
     // Adding body or contents to send
     body: JSON.stringify({
       "cropName":Crop,
-      "diseaseName":diseasename,
+      "Disease":diseasename,
       "solution":medicine,
       "UserName":name,
       "type":type,
@@ -45,7 +48,7 @@ function Form() {
 // Displaying results to console
 .then(json =>{ 
   console.log(json)
-  window.location.href="/home"
+  navigate('/home')
 });
     
     }
@@ -117,7 +120,7 @@ function Form() {
          
 
 
-            <Button h={'16'} fontSize={'20px'} width="full" mt={4} type="submit" onClick={()=>checkfield()} >
+            <Button h={'16'} fontSize={'20px'} width="full" mt={4} type="submit" onClick={(e)=>checkfield(e)} >
               submit
             </Button>
           </form>
