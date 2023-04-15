@@ -1,7 +1,8 @@
 import { Flex, Input,Box,Heading,FormControl,FormLabel,Button,  LightMode } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { useToast } from "@chakra-ui/react";
 
 function Form() {
 
@@ -10,6 +11,7 @@ function Form() {
   const [type,settype] = useState('');
   const [diseasename,setdisease] = useState('');
   const [image,setimage] = useState('');
+  const [tost,settost] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,7 +30,7 @@ function Form() {
     // Adding body or contents to send
     body: JSON.stringify({
       "cropName":Crop,
-      "Disease":diseasename,
+      "diseaseName":diseasename,
       "solution":medicine,
       "UserName":name,
       "type":type,
@@ -48,12 +50,39 @@ function Form() {
 // Displaying results to console
 .then(json =>{ 
   console.log(json)
-  navigate('/home')
+  settost(true);
+  setTimeout(()=>{
+    navigate('/home')
+  },2000)
+  
 });
     
     }
     
   }
+
+
+  const toast = useToast();
+
+  function handleClick() {
+    toast({
+      title: "Information ",
+      description: "added successfully",
+      status: "success",
+      position:'top-right',
+      duration: 3000,
+      isClosable: true,
+
+    });
+  }
+
+  useEffect(()=>{
+    if(tost){
+      handleClick();
+    }
+  },[tost])
+
+
 
 
 
