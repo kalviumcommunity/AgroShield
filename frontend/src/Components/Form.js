@@ -1,6 +1,8 @@
 import { Flex, Input,Box,Heading,FormControl,FormLabel,Button,  LightMode } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useToast } from "@chakra-ui/react";
 
 function Form() {
 
@@ -9,13 +11,16 @@ function Form() {
   const [type,settype] = useState('');
   const [diseasename,setdisease] = useState('');
   const [image,setimage] = useState('');
+  const [tost,settost] = useState(false);
+
+  const navigate = useNavigate();
 
    const USERINPUT = process.env.REACT_APP_SECRET_KEY + '/userinput'
     const Token = sessionStorage.getItem("token")
     const name=sessionStorage.getItem('username')
 
-  const checkfield=()=>{
-    
+  const checkfield=(e)=>{
+    e.preventDefault()
     if(Crop!=="" && medicine!=="" && type!=="" && name!=="" &&  image!=="" && diseasename!==""){
     fetch(USERINPUT, {
      
@@ -45,12 +50,39 @@ function Form() {
 // Displaying results to console
 .then(json =>{ 
   console.log(json)
-  window.location.href="/home"
+  settost(true);
+  setTimeout(()=>{
+    navigate('/home')
+  },2000)
+  
 });
     
     }
     
   }
+
+
+  const toast = useToast();
+
+  function handleClick() {
+    toast({
+      title: "Information ",
+      description: "added successfully",
+      status: "success",
+      position:'top-right',
+      duration: 3000,
+      isClosable: true,
+
+    });
+  }
+
+  useEffect(()=>{
+    if(tost){
+      handleClick();
+    }
+  },[tost])
+
+
 
 
 
@@ -117,7 +149,7 @@ function Form() {
          
 
 
-            <Button h={'16'} fontSize={'20px'} width="full" mt={4} type="submit" onClick={()=>checkfield()} >
+            <Button h={'16'} fontSize={'20px'} width="full" mt={4} type="submit" onClick={(e)=>checkfield(e)} >
               submit
             </Button>
           </form>

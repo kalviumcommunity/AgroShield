@@ -44,10 +44,10 @@ app.post("/userinput",(req,res)=>{
     }
     else{
     const {cropName, diseaseName, solution,UserName,type,image} = req.body;
-
+      // implement schema model
     const model = new finalcrop()
     model.cropName = cropName
-    model.diseaseName = diseaseName
+    model.Disease = diseaseName
     model.solution = solution
     model.UserName = UserName
     model.type = type
@@ -199,12 +199,16 @@ const middleware=(req,res,next)=>{
 
 app.get("/userinput", middleware, async (req, res) => {
     const { cropName } = req.query;
-    if(cropName){
-    const data1 = await finalcrop.find({
-      cropName: { $regex: new RegExp(`^${cropName}`, "i") },
-    });
-    res.send(data1);
-  }
+    if (cropName) {
+      const data1 = await finalcrop.aggregate([
+        {
+          $match: {
+            cropName: { $regex: new RegExp(`^${cropName}`, "i") },
+          },
+        },
+      ]);
+      res.send(data1);
+    }
   else{
     res.json({"error":"please provide data"})
   }

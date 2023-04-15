@@ -12,6 +12,7 @@ function NoteState(props) {
   const name=sessionStorage.getItem("username");
   const [search, setsearch] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
+  const [loder,setloderinhome] = useState(false);
   
 
 
@@ -70,6 +71,7 @@ function NoteState(props) {
     // Update the input field with the selected suggestion
     setQuery(suggestion);
     handlesearch();
+    setloderinhome(true);
     remove();
   };
  
@@ -80,9 +82,9 @@ function NoteState(props) {
 if(useLocation().pathname==='/'){
  
   return (
-    <NoteContext.Provider value={{query,search}} >
+    <NoteContext.Provider value={{query,search,loder}} >
     {props.children}
-</NoteContext.Provider>
+    </NoteContext.Provider>
   )
 
 }
@@ -148,7 +150,7 @@ if(useLocation().pathname==='/'){
 
 
       </header>
-      <NoteContext.Provider value={{query,search}} >
+      <NoteContext.Provider value={{query,search,loder}} >
             {props.children}
         </NoteContext.Provider>
 

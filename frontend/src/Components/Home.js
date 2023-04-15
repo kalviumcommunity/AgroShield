@@ -5,19 +5,32 @@ import { Card,Image,Divider, Stack, CardBody, CardFooter } from '@chakra-ui/reac
 import image from '../assests/process.jpg'
 import { Link, useLocation,useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
+import { Spinner } from '@chakra-ui/react'
 import NodeContext from '../Context/noteContext';
 import Crausal from './Crausal';
 import { FaPlus } from 'react-icons/fa';
 
 function Home(props) {
 
-  const pagechecker = useLocation().pathname === '/home/:id'
-  const homechecker = useLocation().pathname === '/home'
   const cropname=useContext(NodeContext);
 
   const [search,setsearch] = useState([]);
+  const [loder,setloder] = useState(false);
   const [medicine,setmedicineType]=useState("");
   const [dummy,setdummy] = useState([]);
+  const [data,nodata] = useState(false);
+  const [myquery,setmyquery] = useState([1,2]);
+
+  function checkdata(){
+    if(search.length===0){
+      nodata(true);
+    }
+    else{
+      nodata(false)
+    }
+  }
+
+ 
 
   const navigate=useNavigate()
       
@@ -59,7 +72,7 @@ function Home(props) {
       .then((data)=>{
         
         setdummy(data);
-        
+        setloder(false);
       })
       .catch((err)=>{
         console.log(err);
@@ -88,25 +101,59 @@ function Home(props) {
     handleelement()
   }, 1000);
 
-
+  useEffect(()=>{
+    if(dummy.length>0){
+      setmyquery([1])
+    }
+  },[dummy.length])
 
     
  
+  setTimeout(()=>{
+    if(search.length===0 && myquery.length===1 ){
+      nodata(true);
+    }
+  },2000)
+
+  setTimeout(()=>{
+    if(search.length>0  ){
+      nodata(false)
+    }
+  },10)
 
 
-
-
-
+console.log("ljhu",myquery.length)
 
 
 useEffect(() => {
   if(dummy.length>0){
+    setTimeout(()=>{
+      setloder(false);
+    },2000)
+
+
+
+
   setsearch(dummy.filter((e) => {
-           return (medicine)?medicine===e.type:e; 
+           return (
+            (medicine)?medicine===e.type:e
+           )
+           
  }));
 }
 
 }, [dummy,medicine]);
+
+
+
+function loader(){
+  setloder(true);
+  if(dummy.length>0){
+    setTimeout(()=>{
+      setloder(false);
+    },2000)
+  }
+}
 
 const handlefilter=()=>{
 
@@ -121,6 +168,7 @@ const handlefilter=()=>{
 
 
 
+
    
 
     
@@ -130,30 +178,31 @@ const handlefilter=()=>{
           (cropname.query )?
           
           <>
-
+          
           <Flex id="filter" _hover={{cursor:'pointer'}} mt={'10rem'} ml={'2rem'} justifyContent={'left'} >
-          <Box mr={'1rem'} onClick={()=>setmedicineType("")} >
+          <Box mr={'1rem'} onClick={()=>{setmedicineType("");loader()}} >
             All
           </Box>
-          <Box mr={'1rem'} onClick={()=>setmedicineType("Herbicide")} >
+          <Box mr={'1rem'} onClick={()=>{setmedicineType("Herbicide");loader();nodata(false)}} >
             Herb
           </Box>
-          <Box mr={'1rem'} onClick={()=>setmedicineType("Insecticide")} >
+          <Box mr={'1rem'} onClick={()=>{setmedicineType("Insecticide");loader();nodata(false)}} >
             Insect
           </Box>
-          <Box mr={'1rem'} onClick={()=>setmedicineType("Fungicide")}  >
+          <Box mr={'1rem'} onClick={()=>{setmedicineType("Fungicide");loader();nodata(false)}}  >
             Fung
           </Box>
-          <Box mr={'1rem'} onClick={()=>setmedicineType("Bioinsecticide")} >
+          <Box mr={'1rem'} onClick={()=>{setmedicineType("Bioinsecticide");loader();nodata(false)}} >
             Bio-insect
           </Box>
-          <Box onClick={()=>setmedicineType("Biofungicide")}  >
+          <Box onClick={()=>{setmedicineType("Biofungicide");loader();nodata(false)}}>
             Bio-fung
           </Box>
         </Flex>
 
+ 
 
-          {(search.length>0)?
+          {(search.length>0 && !loder )?
           <SimpleGrid mt={'10rem'} p="15px" spacing={10} minChildWidth="350px" minHeight={'80vh'} >
           {
             search.map((dat, index)=>{
@@ -224,7 +273,12 @@ const handlefilter=()=>{
   
   
          </SimpleGrid>:
+         (data)?
          <Flex justifyContent={'center'} m={'20rem'} fontSize={'3rem'} >Sorry! No data found</Flex>
+:
+                        <Flex justifyContent={'center'} m={'22rem'} >
+                        <Spinner/>
+                        </Flex>
          
          }
          <Link to={'/form'} >
