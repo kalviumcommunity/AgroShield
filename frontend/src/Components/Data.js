@@ -50,6 +50,7 @@ function Data() {
     },[])
 
     const API=process.env.REACT_APP_SECRET_KEY+ `/image/${id}`
+    const createlink=process.env.REACT_APP_SECRET_KEY+'/createUser'
 
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -65,7 +66,7 @@ function Data() {
 formData.append('imageUrl', `${imagelink}`);
 
 
-    fetch('http://localhost:4000/createUser', {
+    fetch(createlink, {
       method: 'POST',
       body: formData,
     })

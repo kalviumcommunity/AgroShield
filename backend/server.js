@@ -69,6 +69,12 @@ const storage = new Storage({
 
 
 
+
+
+
+
+
+
 app.post("/userinput",(req,res)=>{
     const {authorization} = req.headers;
     if(!authorization){
@@ -294,140 +300,141 @@ app.put("/image/:id",middleware, async (req, res) => {
 
   })
 
-  app.post('/createlink', async (req, res) => {
-  const form = new formidable.IncomingForm({ multiples: true });
 
-
-
-  try {
-    form.parse(req, async (err, fields, files) => {
-      let uuid = UUID();
-      var downLoadPath =
-        'https://firebasestorage.googleapis.com/v0/b/agroshield-4560f.appspot.com/o/';
-
-      let imageUrl;
-      const docID = userRef.doc().id;
-      
-
-      if (err) {
-        return res.status(400).json({
-          message: 'There was an error parsing the files',
-          data: {},
-          error: err,
-        });
-      }
-
-      function isValidUrl(url) {
-        const regex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-        return regex.test(url);
-      }
-
-      const bucket = storage.bucket('gs://agroshield-4560f.appspot.com');
-
-      // Check if profileImage field is present in the form data
-      if (files.profileImage && files.profileImage.size > 0) {
-        const profileImage = files.profileImage;
-        const imageResponse = await bucket.upload(profileImage.path, {
-          destination: `users/${profileImage.name}`,
-          resumable: true,
-          metadata: {
+  app.post('/createUser', async (req, res) => {
+    const form = new formidable.IncomingForm({ multiples: true });
+  
+  
+  
+    try {
+      form.parse(req, async (err, fields, files) => {
+        let uuid = UUID();
+        var downLoadPath =
+          'https://firebasestorage.googleapis.com/v0/b/agroshield-4560f.appspot.com/o/';
+  
+        let imageUrl;
+        const docID = userRef.doc().id;
+        
+  
+        if (err) {
+          return res.status(400).json({
+            message: 'There was an error parsing the files',
+            data: {},
+            error: err,
+          });
+        }
+  
+        function isValidUrl(url) {
+          const regex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+          return regex.test(url);
+        }
+  
+        const bucket = storage.bucket('gs://agroshield-4560f.appspot.com');
+  
+        // Check if profileImage field is present in the form data
+        if (files.profileImage && files.profileImage.size > 0) {
+          const profileImage = files.profileImage;
+          const imageResponse = await bucket.upload(profileImage.path, {
+            destination: `users/${profileImage.name}`,
+            resumable: true,
             metadata: {
-              firebaseStorageDownloadTokens: uuid,
+              metadata: {
+                firebaseStorageDownloadTokens: uuid,
+              },
             },
-          },
+          });
+  
+          imageUrl =
+            downLoadPath +
+            encodeURIComponent(imageResponse[0].name) +
+            '?alt=media&token=' +
+            uuid;
+  
+            res.json({ "imageUrl": imageUrl });
+        }
+  
+        else if (fields.imageUrl && isValidUrl(fields.imageUrl) ) {
+          // Download image from provided URL
+          const https = require('https');
+  const fs = require('fs');
+  
+  const Url = `${fields.imageUrl}`;
+  const currentDate = new Date().toISOString().replace(/:/g, '-');
+  const directoryName = 'images';
+  
+  if (!fs.existsSync(directoryName)) {
+    fs.mkdirSync(directoryName);
+  }
+  
+  const fileName = `image-${currentDate}.jpg`;
+  const filePath = `${directoryName}/${fileName}`;
+  
+  const file = fs.createWriteStream(filePath);
+  
+  const downloadFile = (url, dest) => {
+    return new Promise((resolve, reject) => {
+      https.get(url, (res) => {
+        res.pipe(file);
+        file.on('finish', () => {
+          file.close((err) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
         });
-
-        imageUrl =
-          downLoadPath +
-          encodeURIComponent(imageResponse[0].name) +
-          '?alt=media&token=' +
-          uuid;
-
-          res.json({ "imageUrl": imageUrl });
-      }
-
-      else if (fields.imageUrl && isValidUrl(fields.imageUrl) ) {
-        // Download image from provided URL
-        const https = require('https');
-const fs = require('fs');
-
-const Url = `${fields.imageUrl}`;
-const currentDate = new Date().toISOString().replace(/:/g, '-');
-const directoryName = 'images';
-
-if (!fs.existsSync(directoryName)) {
-  fs.mkdirSync(directoryName);
-}
-
-const fileName = `image-${currentDate}.jpg`;
-const filePath = `${directoryName}/${fileName}`;
-
-const file = fs.createWriteStream(filePath);
-
-const downloadFile = (url, dest) => {
-  return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
-      res.pipe(file);
-      file.on('finish', () => {
-        file.close((err) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
+        file.on('error', (err) => {
+          reject(err);
         });
-      });
-      file.on('error', (err) => {
+      }).on('error', (err) => {
         reject(err);
       });
-    }).on('error', (err) => {
-      reject(err);
     });
-  });
-};
-
-downloadFile(Url, filePath)
-  .then(async () => {
-    const imageResponse = await bucket.upload(filePath, {
-      destination: `users/${fileName}`,
-      resumable: true,
-      metadata: {
+  };
+  
+  downloadFile(Url, filePath)
+    .then(async () => {
+      const imageResponse = await bucket.upload(filePath, {
+        destination: `users/${fileName}`,
+        resumable: true,
         metadata: {
-          firebaseStorageDownloadTokens: uuid,
+          metadata: {
+            firebaseStorageDownloadTokens: uuid,
+          },
         },
-      },
+      });
+      const imageUrl =
+        downLoadPath +
+        encodeURIComponent(imageResponse[0].name) +
+        '?alt=media&token=' +
+        uuid;
+      res.json({ success: true, imageUrl: imageUrl });
+  
+      // Delete the file after uploading to Firebase
+      fs.unlinkSync(filePath);
+      // console.log('Downloaded image deleted');
+    })
+    .catch((err) => {
+      console.error(err);
     });
-    const imageUrl =
-      downLoadPath +
-      encodeURIComponent(imageResponse[0].name) +
-      '?alt=media&token=' +
-      uuid;
-    res.json({ success: true, imageUrl: imageUrl });
-
-    // Delete the file after uploading to Firebase
-    fs.unlinkSync(filePath);
-    // console.log('Downloaded image deleted');
-  })
-  .catch((err) => {
-    console.error(err);
+  
+     
+        } 
+        
+         else {
+          console.log('No image URL provided');
+        }
+        
+  
+        
+      });
+    } catch (err) {
+      res.send({
+        message: 'Something went wrong',
+        data: {},
+        error: err,
+      });
+    }
   });
-
-   
-      } 
-      
-       else {
-        console.log('No image URL provided');
-      }
-      
-
-      
-    });
-  } catch (err) {
-    res.send({
-      message: 'Something went wrong',
-      data: {},
-      error: err,
-    });
-  }
-});
  

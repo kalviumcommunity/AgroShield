@@ -64,7 +64,7 @@ function Form() {
   });
   }
 
-  const createlink=process.env.REACT_APP_SECRET_KEY+'/createlink'
+  const createlink=process.env.REACT_APP_SECRET_KEY+'/createUser'
 
   const checkfield=(e)=>{
     e.preventDefault()
