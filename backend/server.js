@@ -5,14 +5,23 @@ const cors = require("cors");
 const express = require("express");
 const jwd=require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
+const { Storage } = require("@google-cloud/storage");
+const UUID = require("uuid-v4");
+const formidable = require("formidable-serverless");
+
+
 const app = express();
 app.use(cors())
 app.use(express.json());
+app.use(express.json({ limit: "50mb", extended: true }));
+app.use(express.urlencoded({ extended: false, limit: "50mb" }));
 
 
 const ObjectId = require('mongodb').ObjectId;
 const ChannelModel = require("./Data")
 const finalcrop = require('./Finalcrop');
+
+
 
 mongoose.set('strictQuery', false);
 
@@ -35,6 +44,29 @@ mongoose.connect(DB,{
 }
 )
 .catch((error)=>console.log(error));
+
+
+
+
+require("dotenv").config();
+
+var admin = require("firebase-admin");
+
+
+
+var serviceAccount = require("./admin.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const userRef = admin.firestore().collection("users");
+
+const storage = new Storage({
+  keyFilename: "admin.json",
+});
+
+
 
 
 app.post("/userinput",(req,res)=>{
@@ -184,6 +216,7 @@ const middleware=(req,res,next)=>{
     const {authorization} = req.headers;
     if(!authorization){
         res.send({"error":"authorization is required"})
+        return
     }
     const token = authorization.split(' ')[1]
     try{
@@ -260,4 +293,141 @@ app.put("/image/:id",middleware, async (req, res) => {
         
 
   })
+
+  app.post('/createUser', async (req, res) => {
+  const form = new formidable.IncomingForm({ multiples: true });
+
+
+
+  try {
+    form.parse(req, async (err, fields, files) => {
+      let uuid = UUID();
+      var downLoadPath =
+        'https://firebasestorage.googleapis.com/v0/b/agroshield-4560f.appspot.com/o/';
+
+      let imageUrl;
+      const docID = userRef.doc().id;
+      
+
+      if (err) {
+        return res.status(400).json({
+          message: 'There was an error parsing the files',
+          data: {},
+          error: err,
+        });
+      }
+
+      function isValidUrl(url) {
+        const regex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+        return regex.test(url);
+      }
+
+      const bucket = storage.bucket('gs://agroshield-4560f.appspot.com');
+
+      // Check if profileImage field is present in the form data
+      if (files.profileImage && files.profileImage.size > 0) {
+        const profileImage = files.profileImage;
+        const imageResponse = await bucket.upload(profileImage.path, {
+          destination: `users/${profileImage.name}`,
+          resumable: true,
+          metadata: {
+            metadata: {
+              firebaseStorageDownloadTokens: uuid,
+            },
+          },
+        });
+
+        imageUrl =
+          downLoadPath +
+          encodeURIComponent(imageResponse[0].name) +
+          '?alt=media&token=' +
+          uuid;
+
+          res.json({ "imageUrl": imageUrl });
+      }
+
+      else if (fields.imageUrl && isValidUrl(fields.imageUrl) ) {
+        // Download image from provided URL
+        const https = require('https');
+const fs = require('fs');
+
+const Url = `${fields.imageUrl}`;
+const currentDate = new Date().toISOString().replace(/:/g, '-');
+const directoryName = 'images';
+
+if (!fs.existsSync(directoryName)) {
+  fs.mkdirSync(directoryName);
+}
+
+const fileName = `image-${currentDate}.jpg`;
+const filePath = `${directoryName}/${fileName}`;
+
+const file = fs.createWriteStream(filePath);
+
+const downloadFile = (url, dest) => {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      res.pipe(file);
+      file.on('finish', () => {
+        file.close((err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+      file.on('error', (err) => {
+        reject(err);
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+};
+
+downloadFile(Url, filePath)
+  .then(async () => {
+    const imageResponse = await bucket.upload(filePath, {
+      destination: `users/${fileName}`,
+      resumable: true,
+      metadata: {
+        metadata: {
+          firebaseStorageDownloadTokens: uuid,
+        },
+      },
+    });
+    const imageUrl =
+      downLoadPath +
+      encodeURIComponent(imageResponse[0].name) +
+      '?alt=media&token=' +
+      uuid;
+    res.json({ success: true, imageUrl: imageUrl });
+
+    // Delete the file after uploading to Firebase
+    fs.unlinkSync(filePath);
+    // console.log('Downloaded image deleted');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+
+   
+      } 
+      
+       else {
+        console.log('No image URL provided');
+      }
+      
+
+      
+    });
+  } catch (err) {
+    res.send({
+      message: 'Something went wrong',
+      data: {},
+      error: err,
+    });
+  }
+});
  

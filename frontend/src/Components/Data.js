@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import {AiOutlineComment} from 'react-icons/ai'
 import {BsImage} from 'react-icons/bs'
 import image from '../assests/process.jpg'
+import { Spinner } from '@chakra-ui/react'
 import { FaPlus } from 'react-icons/fa';
 
 function Data() {
@@ -16,6 +17,23 @@ function Data() {
 
 
     const API1=process.env.REACT_APP_SECRET_KEY+`/data/${id}`
+
+    function senddata(link){
+        fetch(API,{
+            method:'PUT',
+            body: JSON.stringify({
+                "image":link
+            }),
+            headers: {
+                'Authorization': 'Bearer ' + Token,
+                  "Content-type": "application/json; charset=UTF-8"
+              }
+        }).then(res=>res.json())
+        .then((data)=>{
+            setdata([]);
+            setdata([data]);
+        }).catch(err=>console.log(err));
+    }
 
     useEffect(()=>{
         fetch(API1,{
@@ -33,22 +51,33 @@ function Data() {
 
     const API=process.env.REACT_APP_SECRET_KEY+ `/image/${id}`
 
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFileInputChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+      };
+
     const handleimageinput=()=>{
         if(imagelink!==' '){
-            fetch(API,{
-                method:'PUT',
-                body: JSON.stringify({
-                    "image":imagelink
-                }),
-                headers: {
-                    'Authorization': 'Bearer ' + Token,
-                      "Content-type": "application/json; charset=UTF-8"
-                  }
-            }).then(res=>res.json())
-            .then((data)=>{
-                setdata([]);
-                setdata([data]);
-            }).catch(err=>console.log(err));
+
+            const formData = new FormData();
+  formData.append('profileImage', selectedFile);
+formData.append('imageUrl', `${imagelink}`);
+
+
+    fetch('http://localhost:4000/createUser', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.imageUrl)
+      senddata(data.imageUrl);
+      
+    })
+    .catch(error => console.error(error));
+
+            
         }
     }
 
@@ -167,10 +196,21 @@ function Data() {
         <Box mb={'5rem'} justifyContent={'space-around'} >
             {
                 (dat.image)?<></>:
-                <Flex mb={'1rem'} >
+                <Box mb={'1rem'} >
+                    <Box  mb={'1rem'} >
+                        <Flex>
                     <Input onChange={(e)=>setimagelink(e.target.value)} placeholder='Provide Image link here' fontSize={'1rem'} w='20rem' h={'4rem'} ></Input>
                     <Button ml={'1rem'} rightIcon={<BsImage/>} onClick={()=>handleimageinput()} fontSize={'1.5rem'} h={'4rem'} w='10rem' >Add </Button>
-                </Flex>
+                    </Flex>
+                    </Box>
+                    <Box>
+                        <Flex>
+                    <Input onChange={handleFileInputChange} placeholder='Provide Image link here' type='file'  fontSize={'1rem'} w='20rem' h={'4rem'} ></Input>
+                    <Button ml={'1rem'} rightIcon={<BsImage/>} onClick={()=>handleimageinput()} fontSize={'1.5rem'} h={'4rem'} w='10rem' >upload </Button>
+                    </Flex>
+                    </Box>
+                    
+                </Box>
             }
                 
                 <Flex>
@@ -186,14 +226,9 @@ function Data() {
     )
     })
     :
-    <Box textAlign="center" mt="20">
-        <Heading as="h1" size="4xl" mb="4">
-          404
-        </Heading>
-        <Text fontSize="2xl" fontWeight="bold">
-          Oops! The page you are looking for does not exist.
-        </Text>
-      </Box>
+                <Flex justifyContent={'center'} m={'22rem'} >
+                        <Spinner/>
+                </Flex>
     
     }
     <Link to={'/form'} >
