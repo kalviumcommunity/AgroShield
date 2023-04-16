@@ -294,7 +294,7 @@ app.put("/image/:id",middleware, async (req, res) => {
 
   })
 
-  app.post('/createUser', async (req, res) => {
+  app.post('/createlink', async (req, res) => {
   const form = new formidable.IncomingForm({ multiples: true });
 
 

@@ -64,6 +64,8 @@ function Form() {
   });
   }
 
+  const createlink=process.env.REACT_APP_SECRET_KEY+'/createlink'
+
   const checkfield=(e)=>{
     e.preventDefault()
     if(Crop!=="" && medicine!=="" && type!=="" && name!=="" && (image!=="" || selectedFile) && diseasename!==""){
@@ -107,7 +109,7 @@ const formData = new FormData();
 formData.append('imageUrl', `${image}`);
 
 
-    fetch('http://localhost:4000/createUser', {
+    fetch(createlink, {
       method: 'POST',
       body: formData,
     })
