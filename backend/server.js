@@ -396,9 +396,9 @@ app.put("/image/:id",middleware, async (req, res) => {
               } else {
                 console.log('Image saved successfully.');
 
-                if (fs.existsSync('./images/crop.jpg')) {
-                const imageResponse = await bucket.upload('./images/crop.jpg', {
-                  destination: `users/${Date.now()}.jpg`,
+                
+                const imageResponse = await bucket.upload(`./images/crop.${fileExtension}`, {
+                  destination: `users/${Date.now()}.${fileExtension}`,
                   resumable: true,
                   metadata: {
                     metadata: {
@@ -415,11 +415,9 @@ app.put("/image/:id",middleware, async (req, res) => {
 
                 res.json({ "imageUrl": imageUrl });
                 setTimeout(()=>{
-                  fs.unlinkSync('./images/crop.jpg');
+                  fs.unlinkSync(`./images/crop.${fileExtension}`);
                 },15000)
-              } else {
-                console.error('Failed to find image: ./images/crop.jpg');
-              }
+              
 
               }
             }
