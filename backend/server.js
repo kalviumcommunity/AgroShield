@@ -361,66 +361,59 @@ app.put("/image/:id",middleware, async (req, res) => {
           const https = require('https');
   const fs = require('fs');
   
-  const Url = `${fields.imageUrl}`;
-  const currentDate = new Date().toISOString().replace(/:/g, '-');
-  const directoryName = 'images';
+  function saveImage(url, path, callback) {
+    const fullUrl = url;
+    const localPath = fs.createWriteStream(path);
   
-  if (!fs.existsSync(directoryName)) {
-    fs.mkdirSync(directoryName);
+    const request = https.get(fullUrl, function(res) {
+      res.pipe(localPath);
+      localPath.on('finish', function() {
+        localPath.close(function() {
+          callback(null);
+        });
+      });
+    });
+  
+    request.on('error', function(err) {
+      console.error(err);
+      callback(err);
+    });
   }
   
-  const fileName = `image-${currentDate}.jpg`;
-  const filePath = `${directoryName}/${fileName}`;
   
-  const file = fs.createWriteStream(filePath);
   
-  const downloadFile = (url, dest) => {
-    return new Promise((resolve, reject) => {
-      https.get(url, (res) => {
-        res.pipe(file);
-        file.on('finish', () => {
-          file.close((err) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve();
-            }
-          });
-        });
-        file.on('error', (err) => {
-          reject(err);
-        });
-      }).on('error', (err) => {
-        reject(err);
-      });
-    });
-  };
-  
-  downloadFile(Url, filePath)
-    .then(async () => {
-      const imageResponse = await bucket.upload(filePath, {
-        destination: `users/${fileName}`,
-        resumable: true,
-        metadata: {
+  saveImage(
+    `${fields.imageUrl}`,
+    './images/crop' + '.jpg',
+    async function(err) {
+      if (err) {
+        console.error('Failed to save image:', err);
+      } else {
+        console.log('Image saved successfully.');
+        const imageResponse = await bucket.upload('./images/crop.jpg', {
+          destination: `users/${Date.now()}.jpg`,
+          resumable: true,
           metadata: {
-            firebaseStorageDownloadTokens: uuid,
+            metadata: {
+              firebaseStorageDownloadTokens: uuid,
+            },
           },
-        },
-      });
-      const imageUrl =
-        downLoadPath +
-        encodeURIComponent(imageResponse[0].name) +
-        '?alt=media&token=' +
-        uuid;
-      res.json({ success: true, imageUrl: imageUrl });
+        });
   
-      // Delete the file after uploading to Firebase
-      fs.unlinkSync(filePath);
-      // console.log('Downloaded image deleted');
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+        imageUrl =
+          downLoadPath +
+          encodeURIComponent(imageResponse[0].name) +
+          '?alt=media&token=' +
+          uuid;
+  
+          res.json({ "imageUrl": imageUrl });
+          setTimeout(()=>{
+            fs.unlinkSync('./images/crop.jpg');
+          },15000)
+      }
+    }
+  );
+  
   
      
         } 
