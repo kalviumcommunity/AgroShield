@@ -414,9 +414,9 @@ app.put("/image/:id",middleware, async (req, res) => {
                   uuid;
 
                 res.json({ "imageUrl": imageUrl });
-                setTimeout(()=>{
+                
                   fs.unlinkSync(`./images/crop.${fileExtension}`);
-                },15000)
+                
               
 
               }

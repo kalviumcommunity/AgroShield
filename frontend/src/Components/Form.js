@@ -64,68 +64,45 @@ function Form() {
   });
   }
 
+
+
   const createlink=process.env.REACT_APP_SECRET_KEY+'/createUser'
 
   const checkfield=(e)=>{
     e.preventDefault()
     if(Crop!=="" && medicine!=="" && type!=="" && name!=="" && (image!=="" || selectedFile) && diseasename!==""){
-//     fetch(USERINPUT, {
-     
-//     // Adding method type
-//     method: "POST",
-     
-//     // Adding body or contents to send
-//     body: JSON.stringify({
-//       "cropName":Crop,
-//       "diseaseName":diseasename,
-//       "solution":medicine,
-//       "UserName":name,
-//       "type":type,
-//       "image":image,
-//   }),
-     
-//     // Adding headers to the request
-//     headers: {
-//       'Authorization': 'Bearer ' + Token,
-//         "Content-type": "application/json; charset=UTF-8"
-//     }
-// })
- 
-// Converting to JSON
-// .then(response => response.json())
- 
-// // Displaying results to console
-// .then(json =>{ 
-//   console.log(json)
-//   settost(true);
-//   setTimeout(()=>{
-//     navigate('/home')
-//   },2000)
-  
-// });
 
-const formData = new FormData();
-  formData.append('profileImage', selectedFile);
-formData.append('imageUrl', `${image}`);
+      const fileExtension = image.split('.').pop();
+      console.log(fileExtension);
+      if(fileExtension === "jpg" || fileExtension === "png" || fileExtension === "jpeg"){
+        const formData = new FormData();
+        formData.append('profileImage', selectedFile);
+      formData.append('imageUrl', `${image}`);
 
 
-    fetch(createlink, {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data.imageUrl)
-      senddata(data.imageUrl);
-      
-    })
-    .catch(error => console.error(error));
-    
-    }
+          fetch(createlink, {
+            method: 'POST',
+            body: formData,
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.imageUrl)
+            senddata(data.imageUrl);
+            
+          })
+          .catch(error => console.error(error));
+          
+          }
+      }
+      else{
+        alert('Image extension shoould be jpg,jpeg or png')
+      }
 
-    
-    
-  }
+
+
+            
+            
+          }
 
 
   const toast = useToast();
