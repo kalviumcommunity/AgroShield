@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs")
 const { Storage } = require("@google-cloud/storage");
 const UUID = require("uuid-v4");
 const formidable = require("formidable-serverless");
+const url = require('url');
 
 
 const app = express();
@@ -359,64 +360,71 @@ app.put("/image/:id",middleware, async (req, res) => {
         else if (fields.imageUrl && isValidUrl(fields.imageUrl) ) {
           // Download image from provided URL
           const https = require('https');
-  const fs = require('fs');
-  
-  function saveImage(url, path, callback) {
-    const fullUrl = url;
-    const localPath = fs.createWriteStream(path);
-  
-    const request = https.get(fullUrl, function(res) {
-      res.pipe(localPath);
-      localPath.on('finish', function() {
-        localPath.close(function() {
-          callback(null);
-        });
-      });
-    });
-  
-    request.on('error', function(err) {
-      console.error(err);
-      callback(err);
-    });
-  }
-  
-  
-  
-  saveImage(
-    `${fields.imageUrl}`,
-    './images/crop' + '.jpg',
-    async function(err) {
-      if (err) {
-        console.error('Failed to save image:', err);
-      } else {
-        console.log('Image saved successfully.');
-        const imageResponse = await bucket.upload('./images/crop.jpg', {
-          destination: `users/${Date.now()}.jpg`,
-          resumable: true,
-          metadata: {
-            metadata: {
-              firebaseStorageDownloadTokens: uuid,
-            },
-          },
-        });
-  
-        imageUrl =
-          downLoadPath +
-          encodeURIComponent(imageResponse[0].name) +
-          '?alt=media&token=' +
-          uuid;
-  
-          res.json({ "imageUrl": imageUrl });
-          setTimeout(()=>{
-            fs.unlinkSync('./images/crop.jpg');
-          },15000)
-      }
-    }
-  );
+          const fs = require('fs');
+          
+          async function saveImage(url, path, callback) {
+            const fullUrl = url;
+            const localPath = fs.createWriteStream(path);
+          
+            const request = https.get(fullUrl,  function(res) {
+              res.pipe(localPath);
+              localPath.on('finish',  function() {
+                localPath.close(function() {
+                  callback(null);
+                });
+              });
+            });
+          
+            request.on('error', function(err) {
+              console.error(err);
+              callback(err);
+            });
+          }
+          
+
+              const fileName = url.parse(fields.imageUrl).pathname.split('/').pop();
+              const fileExtension = fileName.split('.').pop();
+              console.log(fileExtension);
+        
+          console.log(fileExtension)
+          await saveImage(
+            `${fields.imageUrl}`,
+            `./images/crop.${fileExtension}`,
+            async function(err) {
+              if (err) {
+                console.error('Failed to save image:', err);
+              } else {
+                console.log('Image saved successfully.');
+                const imageResponse = await bucket.upload(`./images/crop.${fileExtension}`, {
+                  destination: `users/${Date.now()}.${fileExtension}`,
+                  resumable: true,
+                  metadata: {
+                    metadata: {
+                      firebaseStorageDownloadTokens: uuid,
+                    },
+                  },
+                });
+          
+                imageUrl =
+                  downLoadPath +
+                  encodeURIComponent(imageResponse[0].name) +
+                  '?alt=media&token=' +
+                  uuid;
+          
+                res.json({ "imageUrl": imageUrl });
+                
+                // Delete the local image file after 15 seconds
+                setTimeout(()=>{
+                  fs.unlinkSync(`./images/crop.${fileExtension}`);
+                },15000);
+              }
+            }
+          );
+        }
   
   
      
-        } 
+        
         
          else {
           console.log('No image URL provided');
