@@ -53,8 +53,12 @@ require("dotenv").config();
 var admin = require("firebase-admin");
 
 
+const adminJsonContents = JSON.parse(process.env.GOOGLECLOUD);
 
-var serviceAccount = require("./admin.json");
+var serviceAccount = adminJsonContents;
+
+
+
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -63,9 +67,8 @@ admin.initializeApp({
 const userRef = admin.firestore().collection("users");
 
 const storage = new Storage({
-  keyFilename: "admin.json",
+  credentials: adminJsonContents,
 });
-
 
 
 
