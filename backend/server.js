@@ -395,8 +395,10 @@ app.put("/image/:id",middleware, async (req, res) => {
                 console.error('Failed to save image:', err);
               } else {
                 console.log('Image saved successfully.');
-                const imageResponse = await bucket.upload(`./images/crop.${fileExtension}`, {
-                  destination: `users/${Date.now()}.${fileExtension}`,
+
+                if (fs.existsSync('./images/crop.jpg')) {
+                const imageResponse = await bucket.upload('./images/crop.jpg', {
+                  destination: `users/${Date.now()}.jpg`,
                   resumable: true,
                   metadata: {
                     metadata: {
@@ -404,19 +406,21 @@ app.put("/image/:id",middleware, async (req, res) => {
                     },
                   },
                 });
-          
+
                 imageUrl =
                   downLoadPath +
                   encodeURIComponent(imageResponse[0].name) +
                   '?alt=media&token=' +
                   uuid;
-          
+
                 res.json({ "imageUrl": imageUrl });
-                
-                // Delete the local image file after 15 seconds
                 setTimeout(()=>{
-                  fs.unlinkSync(`./images/crop.${fileExtension}`);
-                },15000);
+                  fs.unlinkSync('./images/crop.jpg');
+                },15000)
+              } else {
+                console.error('Failed to find image: ./images/crop.jpg');
+              }
+
               }
             }
           );
