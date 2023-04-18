@@ -96,7 +96,7 @@ formData.append('imageUrl', `${imagelink}`);
                 } else {
                 // The image extension is invalid
                 console.log('Image extension is invalid');
-                alert('only png and jpg extension is supported');
+                alert('only png and jpg extension is supported and length should be not greater than 100 charecters');
                 setimagelink('')
                 }
           
