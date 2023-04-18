@@ -16,6 +16,8 @@ function Data() {
     const Token = sessionStorage.getItem("token");
 
 
+
+
     const API1=process.env.REACT_APP_SECRET_KEY+`/data/${id}`
 
     function senddata(link){
@@ -80,6 +82,25 @@ formData.append('imageUrl', `${imagelink}`);
 
             
         }
+    }
+
+
+    function checklink(){
+        if(imagelink!==' '){
+            const extension = imagelink.split('.').pop().toLowerCase();
+
+                if (extension === 'png') {
+                // The image extension is valid
+                console.log('Image extension is valid');
+                handleimageinput()
+                } else {
+                // The image extension is invalid
+                console.log('Image extension is invalid');
+                alert('only png extension is supported');
+                setimagelink('')
+                }
+          
+    }
     }
 
     const COMMENT=process.env.REACT_APP_SECRET_KEY+ `/comment/${id}`
@@ -200,8 +221,8 @@ formData.append('imageUrl', `${imagelink}`);
                 <Box mb={'1rem'} >
                     <Box  mb={'1rem'} >
                         <Flex>
-                    <Input onChange={(e)=>setimagelink(e.target.value)} placeholder='Provide Image link here' fontSize={'1rem'} w='20rem' h={'4rem'} ></Input>
-                    <Button ml={'1rem'} rightIcon={<BsImage/>} onClick={()=>handleimageinput()} fontSize={'1.5rem'} h={'4rem'} w='10rem' >Add </Button>
+                    <Input value={imagelink} onChange={(e)=>setimagelink(e.target.value)} placeholder='Provide Image link here' fontSize={'1rem'} w='20rem' h={'4rem'} ></Input>
+                    <Button ml={'1rem'} rightIcon={<BsImage/>} onClick={()=>checklink()} fontSize={'1.5rem'} h={'4rem'} w='10rem' >Add </Button>
                     </Flex>
                     </Box>
                     <Box>
