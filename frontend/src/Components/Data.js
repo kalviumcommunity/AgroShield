@@ -89,14 +89,14 @@ formData.append('imageUrl', `${imagelink}`);
         if(imagelink!==' '){
             const extension = imagelink.split('.').pop().toLowerCase();
 
-                if (extension === 'png') {
+                if ((extension === 'png' || extension === 'jpg' ) && imagelink.length < 100 ) {
                 // The image extension is valid
                 console.log('Image extension is valid');
                 handleimageinput()
                 } else {
                 // The image extension is invalid
                 console.log('Image extension is invalid');
-                alert('only png extension is supported');
+                alert('only png and jpg extension is supported');
                 setimagelink('')
                 }
           
