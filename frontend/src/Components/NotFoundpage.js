@@ -1,19 +1,19 @@
+import Spline from '@splinetool/react-spline'
 
 
 
-
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box,Flex} from "@chakra-ui/react";
 
 
 const NotFoundPage = () => {
     return (
-      <Box textAlign="center" m="25rem">
-        <Heading as="h1" size="4xl" mb="4">
-          404
-        </Heading>
-        <Text fontSize="2xl" fontWeight="bold">
-          Oops! The page you are looking for does not exist.
-        </Text>
+      <Box textAlign="center">
+        <Flex minH={'100vh'} h={'100vh'} w={'100vw'} >
+        <Spline 
+        
+        scene='https://prod.spline.design/s-Ju3hpzU123GPax/scene.splinecode'
+        />
+        </Flex>
       </Box>
     );
   };

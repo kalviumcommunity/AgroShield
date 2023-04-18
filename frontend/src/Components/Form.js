@@ -12,6 +12,7 @@ function Form() {
   const [diseasename,setdisease] = useState('');
   const [image,setimage] = useState('');
   const [tost,settost] = useState(false);
+  
 
   const navigate = useNavigate();
 
@@ -19,47 +20,89 @@ function Form() {
     const Token = sessionStorage.getItem("token")
     const name=sessionStorage.getItem('username')
 
-  const checkfield=(e)=>{
-    e.preventDefault()
-    if(Crop!=="" && medicine!=="" && type!=="" && name!=="" &&  image!=="" && diseasename!==""){
+    const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileInputChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  function senddata(Image){
+    
     fetch(USERINPUT, {
      
-    // Adding method type
-    method: "POST",
-     
-    // Adding body or contents to send
-    body: JSON.stringify({
-      "cropName":Crop,
-      "diseaseName":diseasename,
-      "solution":medicine,
-      "UserName":name,
-      "type":type,
-      "image":image,
-  }),
-     
-    // Adding headers to the request
-    headers: {
-      'Authorization': 'Bearer ' + Token,
-        "Content-type": "application/json; charset=UTF-8"
-    }
-})
- 
-// Converting to JSON
-.then(response => response.json())
- 
-// Displaying results to console
-.then(json =>{ 
-  console.log(json)
-  settost(true);
-  setTimeout(()=>{
-    navigate('/home')
-  },2000)
+      // Adding method type
+      method: "POST",
+       
+      // Adding body or contents to send
+      body: JSON.stringify({
+        "cropName":Crop,
+        "diseaseName":diseasename,
+        "solution":medicine,
+        "UserName":name,
+        "type":type,
+        "image":Image,
+    }),
+       
+      // Adding headers to the request
+      headers: {
+        'Authorization': 'Bearer ' + Token,
+          "Content-type": "application/json; charset=UTF-8"
+      }
+  })
+   
   
-});
+  .then(response => response.json())
+   
+  // Displaying results to console
+  .then(json =>{ 
+    console.log(json)
+    settost(true);
+    setTimeout(()=>{
+      navigate('/home')
+    },2000)
     
-    }
-    
+  });
   }
+
+
+
+  const createlink=process.env.REACT_APP_SECRET_KEY+'/createUser'
+
+  const checkfield=(e)=>{
+    e.preventDefault()
+    if(Crop!=="" && medicine!=="" && type!=="" && name!=="" && (image!=="" || selectedFile) && diseasename!==""){
+
+      const fileExtension = image.split('.').pop();
+      console.log(fileExtension);
+      if(fileExtension === "jpg" || fileExtension === "png" || fileExtension === "jpeg"){
+        const formData = new FormData();
+        formData.append('profileImage', selectedFile);
+      formData.append('imageUrl', `${image}`);
+
+
+          fetch(createlink, {
+            method: 'POST',
+            body: formData,
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.imageUrl)
+            senddata(data.imageUrl);
+            
+          })
+          .catch(error => console.error(error));
+          
+          }
+      }
+      else{
+        alert('Image extension shoould be jpg,jpeg or png')
+      }
+
+
+
+            
+            
+          }
 
 
   const toast = useToast();
@@ -144,6 +187,16 @@ function Form() {
               <FormLabel fontSize={'20px'} >Disease Image</FormLabel>
               <Input onChange={(e)=>setimage(e.target.value)} h={'16'} size={'lg'} type={'text'}  placeholder="Paste the image link here..." />
             </FormControl>
+
+            <FormControl mb={'10'} >
+              <FormLabel fontSize={'20px'} >Disease Image</FormLabel>
+              <Input type="file" onChange={handleFileInputChange} h={'16'} size={'lg'} placeholder="provide image here..." />
+              {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+            </FormControl>
+
+
+
+
 
 
          
